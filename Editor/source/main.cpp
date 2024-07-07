@@ -1,7 +1,7 @@
 #include <SDL2/SDL.h>
-#include <Balkan3D/include/Log/Loging.h>
+#include <Balkan3D/include/Logging/Loging.h>
 #include <Balkan3D/include/Window.h>
-#include <Balkan3D/include/Log/Asserts.h>
+#include <Balkan3D/include/Logging/Asserts.h>
 #undef main
 
 int main(void)

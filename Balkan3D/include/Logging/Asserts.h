@@ -10,16 +10,16 @@
 #define debugBreak()
 #endif // ASSERTIONS_ENABLE
 
-extern "C" BALKAN3D_API void reportAssert(bool expression, const char* message, const char* file);
+extern "C" BALKAN3D_API void reportAssert(bool expression, const char* message, const char* file, long line);
 
-#define BALKAN3D_ASSERT(expression, message)				\
-		{													\
-			if (!expression)								\
-			{												\
-				reportAssert(expression, message, __FILE__);\
-				debugBreak();								\
-			}												\
-															\
+#define BALKAN3D_ASSERT(expression, message)							\
+		{																\
+			if (!expression)											\
+			{															\
+				reportAssert(expression, message, __FILE__, __LINE__);	\
+				debugBreak();											\
+			}															\
+																		\
 		}													
 
 

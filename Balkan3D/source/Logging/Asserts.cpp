@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Logging/Asserts.h"
 
-void reportAssert(bool expression, const char* message, const char* file)
+void reportAssert(bool expression, const char* message, const char* file, long line)
 {
-	LOG_FATAL("Assertion failure!: %s, message: %s, file: %s", expression, message, file);
+	LOG_FATAL("Assertion failure in: %s at line %d because %s, message: %s", file, line, expression ? "true" : "false", message);
 }
