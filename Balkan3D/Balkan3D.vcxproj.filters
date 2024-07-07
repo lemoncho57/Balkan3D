@@ -24,10 +24,10 @@
     <ClCompile Include="source\EntryPoint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Log\Logging.cpp">
+    <ClCompile Include="source\Logging\Logging.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Log\Asserts.cpp">
+    <ClCompile Include="source\Logging\Asserts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,7 +35,7 @@
     <ClInclude Include="include\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Log\Loging.h">
+    <ClInclude Include="include\Logging\Loging.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Core.h">
@@ -47,7 +47,7 @@
     <ClInclude Include="include\EntryPoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Log\Asserts.h">
+    <ClInclude Include="include\Logging\Asserts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

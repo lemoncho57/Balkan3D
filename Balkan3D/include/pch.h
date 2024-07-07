@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 #include "Core.h"
 #include "Window.h"
-#include "Log/Loging.h"
+#include "Logging/Loging.h"
 #include <iostream>
 #include <stdio.h>
 #include <cstdarg>

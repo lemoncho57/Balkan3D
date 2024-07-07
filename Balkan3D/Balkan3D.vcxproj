@@ -20,8 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\EntryPoint.cpp" />
-    <ClCompile Include="source\Log\Asserts.cpp" />
-    <ClCompile Include="source\Log\Logging.cpp" />
+    <ClCompile Include="source\Logging\Asserts.cpp" />
+    <ClCompile Include="source\Logging\Logging.cpp" />
     <ClCompile Include="source\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
@@ -33,8 +33,8 @@
   <ItemGroup>
     <ClInclude Include="include\Core.h" />
     <ClInclude Include="include\EntryPoint.h" />
-    <ClInclude Include="include\Log\Asserts.h" />
-    <ClInclude Include="include\Log\Loging.h" />
+    <ClInclude Include="include\Logging\Asserts.h" />
+    <ClInclude Include="include\Logging\Loging.h" />
     <ClInclude Include="include\pch.h" />
     <ClInclude Include="include\Window.h" />
   </ItemGroup>
