@@ -21,13 +21,16 @@
     <ClCompile Include="source\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\EntryPoint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\Logging\Logging.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\Logging\Asserts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Events\Events.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\vendors\include\glad\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,10 +47,13 @@
     <ClInclude Include="include\pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\EntryPoint.h">
+    <ClInclude Include="include\Logging\Asserts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Logging\Asserts.h">
+    <ClInclude Include="include\Events\Events.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Events\KeyCodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

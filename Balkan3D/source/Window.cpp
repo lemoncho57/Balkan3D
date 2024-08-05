@@ -1,64 +1,80 @@
-#include <pch.h>
+#include "pch.h"
 #include "Window.h"
-#include <assert.h>
 
 Window::Window(const char* title, int width, int height)
 	: m_title((char*) title), m_width(width), m_height(height)
 {
+	BALKAN3D_ASSERT(glfwInit(), "Unable to initialize GLFW!");
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+	m_window = glfwCreateWindow(width, height, title, NULL, NULL);
+	BALKAN3D_ASSERT(m_window, "Unable to create window");
 	
+	glfwMakeContextCurrent(m_window);
+	
+	BALKAN3D_ASSERT(gladLoadGL(), "Unable to load OpenGL");
+	BALKAN3D_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Unable to initialize glad");
 }
 
 Window::~Window()
 {
-
+	close();
 }
 
-extern "C" BALKAN3D_API bool Window::initSDL(Uint32 flags)
+void Window::beginDrawing()
 {
-	if (SDL_Init(flags) < 0)
-	{
-		//LOG_ERROR("Unable to initialize SDL!");
-		return false;
-	}
+	glfwGetFramebufferSize(m_window, &m_width, &m_height);
+	glViewport(0, 0, m_width, m_height);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor(1.f, 1.f, 0.f, 1.f);
 
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-	m_window = SDL_CreateWindow(m_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_width, m_height, SDL_WINDOW_OPENGL);
-
-	m_glContext = SDL_GL_CreateContext(m_window);
-	if (!m_glContext)
-	{
-		//LOG_ERROR("Unable to initialize OpenGL!");
-		return false;
-	}
-
-	return true;
 }
 
-extern "C" BALKAN3D_API void Window::release()
+void Window::endDrawing()
 {
-	SDL_DestroyWindow(m_window);
-	SDL_GL_DeleteContext(m_glContext);
-	SDL_Quit();
+	swapBuffers();
+	glfwPollEvents();
 }
 
-extern "C" BALKAN3D_API SDL_Window* Window::getWindow() const
+void Window::close()
+{
+	glfwSetWindowShouldClose(m_window, GLFW_TRUE);
+}
+
+void Window::swapBuffers()
+{
+	glfwSwapBuffers(m_window);
+}
+
+void Window::release()
+{
+	glfwDestroyWindow(m_window);
+	glfwTerminate();
+}
+
+GLFWwindow* Window::getWindow() const
 {
 	return m_window;
 }
 
-extern "C" BALKAN3D_API int Window::getWindowWidth() const
+int Window::getWidth() const
 {
 	return m_width;
 }
 
-extern "C" BALKAN3D_API int Window::getWindowHeight() const
+int Window::getHeight() const
 {
 	return m_height;
+}
+
+void Window::setSize(int width, int height)
+{
+	glfwSetWindowSize(m_window, width, height);
+}
+
+bool Window::shouldClose() const
+{
+	return glfwWindowShouldClose(m_window);
 }

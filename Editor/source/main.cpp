@@ -1,31 +1,27 @@
-#include <SDL2/SDL.h>
 #include <Balkan3D/include/Logging/Loging.h>
 #include <Balkan3D/include/Window.h>
 #include <Balkan3D/include/Logging/Asserts.h>
-#undef main
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
+// Code is just for testing
 int main(void)
 {
-	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+	Window window("Idk", 1280, 720);
+	Events events;
+
+	events.setCurrentWindow(&window);
+
+	while(!window.shouldClose())
 	{
-		return 1;
-	}
-	BALKAN3D_ASSERT(true, "Unable to start SDL!");
+		window.beginDrawing();
 
-	Window window("Hello", 1280, 720);
-	window.initSDL();
+		if (events.isKeyPressed(KeyCodes::KEY_ESCAPE))
+			window.close();
 
-	bool shouldClose = false;
-	SDL_Event e;
-
-	while (!shouldClose)
-	{
-		while (SDL_PollEvent(&e) != 0)
-		{
-			if (e.type == SDL_QUIT)
-				shouldClose = true;
-		}
+		window.endDrawing();
 	}
 
+	window.release();
 	return 0;
 }
