@@ -8,7 +8,7 @@ Window::Window(const char* title, int width, int height)
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	m_window = glfwCreateWindow(width, height, title, NULL, NULL);
 	BALKAN3D_ASSERT(m_window, "Unable to create window");
 	
@@ -28,8 +28,6 @@ void Window::beginDrawing()
 	glfwGetFramebufferSize(m_window, &m_width, &m_height);
 	glViewport(0, 0, m_width, m_height);
 	glClear(GL_COLOR_BUFFER_BIT);
-	glClearColor(1.f, 1.f, 0.f, 1.f);
-
 }
 
 void Window::endDrawing()
