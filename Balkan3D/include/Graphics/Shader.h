@@ -24,8 +24,8 @@ public:
 	void setvec2f(const char* name, glm::fvec2 value);
 	void setvec3f(const char* name, glm::fvec3 value);
 	void setvec4f(const char* name, glm::fvec4 value);
-	void setmat3fv(const char* name, glm::fmat3 value, GLboolean transpose);
-	void setmat4fv(const char* name, glm::fmat4 value, GLboolean transpose);
+	void setmat3fv(const char* name, glm::fmat3 value, GLboolean transpose = GL_FALSE);
+	void setmat4fv(const char* name, glm::fmat4 value, GLboolean transpose = GL_FALSE);
 
 	GLuint getId() const;
 

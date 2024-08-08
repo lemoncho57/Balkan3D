@@ -5,6 +5,7 @@
 #include <Balkan3D/include/Graphics/Shader.h>
 #include <Balkan3D/include/Graphics/Mesh.h>
 #include <Balkan3D/include/Graphics/Texture.h>
+#include <Balkan3D/include/Graphics/Camera.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <string>
@@ -24,9 +25,12 @@ int main(void)
 					out vec3 color;
 					out vec2 texCoords;					
 
+					uniform mat4 camMatrix;
+					uniform mat4 projMatrix;
+
 					void main()
 					{
-						gl_Position = vec4(aPos, 1.0);
+						gl_Position = projMatrix * camMatrix * vec4(aPos, 1.0);
 						color = aColor;
 						texCoords = aTexCoords;
 					})",
@@ -47,6 +51,7 @@ int main(void)
 					}
 					)");
 
+	Camera camera(glm::vec3(0.f, 0.f, 3.f), 50.f,(float) window.getWidth() / (float) window.getHeight());
 
 	Mesh mesh;
 	mesh.vertices = 
@@ -87,6 +92,11 @@ int main(void)
 
 		shader.set1i("tex", 0);
 		shader.set1i("tex2", 1);
+		//shader.setmat4fv("projMatrix", camera.getProjectionMatrix(), GL_FALSE);
+		glm::mat4 view = camera.getViewMatrix();
+		shader.setmat4fv("camMatrix", view, GL_FALSE);
+		glm::mat4 proj = camera.getProjectionMatrix();
+		shader.setmat4fv("projMatrix", proj, GL_FALSE);
 		shader.use();
 
 
