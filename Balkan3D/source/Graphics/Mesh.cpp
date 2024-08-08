@@ -18,11 +18,6 @@ Mesh::~Mesh()
 	glDeleteVertexArrays(1, &VAO);
 }
 
-void Mesh::use()
-{
-	glBindVertexArray(VAO);
-}
-
 void Mesh::draw()
 {
 	glBindVertexArray(VAO);
@@ -52,6 +47,9 @@ void Mesh::submit()
 	// Color
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, color));
 	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texCoords));
+	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(0);
 }

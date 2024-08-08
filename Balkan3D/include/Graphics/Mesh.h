@@ -8,6 +8,7 @@ extern "C" struct BALKAN3D_API Vertex
 {
 	glm::vec3 position;
 	glm::vec3 color;
+	glm::vec2 texCoords;
 };
 
 extern "C" class BALKAN3D_API Mesh
@@ -16,8 +17,8 @@ public:
 	Mesh();
 	~Mesh();
 
-	void use();
-	void draw();
+	//void use(); // This is already done in draw
+	void draw(); 
 
 	void submit();
 
