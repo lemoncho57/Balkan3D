@@ -1,4 +1,6 @@
-#pragma once
+#ifndef GRAPHICS_CAMERA_H
+#define GRAPHICS_CAMERA_H
+
 
 #include "Core.h"
 #include <glm/glm.hpp>
@@ -46,3 +48,4 @@ private:
 	GLfloat m_far;
 	float m_aspect;
 };
+#endif // !GRAPHICS_CAMERA_H

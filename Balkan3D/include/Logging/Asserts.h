@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LOGGING_ASSERTS_H
+#define LOGGING_ASSERTS_H
 
 #include "Core.h"
 
@@ -28,3 +29,5 @@ extern "C" BALKAN3D_API void reportAssert(const char* expression, const char* me
 #else
 #define BALKAN3D_ASSERT_DEBUG(expression, message)
 #endif // _DEBUG
+
+#endif //LOGGING_ASSERTS_H

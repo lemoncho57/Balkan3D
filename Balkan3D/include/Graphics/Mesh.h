@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GRAPHICS_MESH_H
+#define GRAPHICS_MESH_H
 #include "Core.h"
 #include <glm/glm.hpp>
 #include <glad/glad.h>
@@ -30,3 +31,4 @@ private:
 	GLuint VBO = 0;
 	GLuint EBO = 0;
 };
+#endif //GRAPHICS_MESH_H

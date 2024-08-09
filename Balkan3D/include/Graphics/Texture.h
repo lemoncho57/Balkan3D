@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GRAPHICS_TEXTURE_H
+#define GRAPHICS_TEXTURE_H
 #include <stb_image/stb_image.h>
 #include "Core.h"
 
@@ -21,3 +22,4 @@ private:
 	unsigned char* m_imageData;
 	GLuint m_texture;
 };
+#endif //!GRAPHICS_TEXTURE_H

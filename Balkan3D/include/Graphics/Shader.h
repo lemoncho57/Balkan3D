@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GRAPHICS_SHADER_H
+#define GRAPHICS_SHADER_H
 #include "Core.h"
 #include "glad/glad.h"
 #include <string>
@@ -34,3 +35,4 @@ private:
 	GLuint m_vertexShader;
 	GLuint m_fragmentShader;
 };
+#endif //GRAPHICS_SHADER_H

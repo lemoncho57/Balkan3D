@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EVENTS_EVENTS_H
+#define EVENTS_EVENTS_H
 #include "pch.h"
 
 enum Keys;
@@ -16,3 +17,4 @@ public:
 private:
 	GLFWwindow* m_window;
 };
+#endif //EVENTS_EVENTS_H

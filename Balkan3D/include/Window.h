@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WINDOW_H
+#define WINDOW_H
 #include "pch.h"
 
 extern "C" class BALKAN3D_API Window
@@ -27,3 +28,4 @@ private:
 	int m_height;
 	GLFWwindow* m_window;
 };
+#endif //WINDOW_H

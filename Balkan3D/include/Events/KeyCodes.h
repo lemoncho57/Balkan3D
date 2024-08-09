@@ -1,4 +1,5 @@
-#pragma once
+#ifndef EVENTS_KEYCODES_H
+#define EVENTS_KEYCODES_H
 
 namespace KeyCodes
 {
@@ -124,3 +125,4 @@ namespace KeyCodes
 	KEY_MENU			=	348,
 	} Keys;
 }
+#endif //EVENTS_KEYCODES_H

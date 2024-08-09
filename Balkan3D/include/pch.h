@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef PCH_H
+#define PCH_H
 
 #include <glad/glad.h>
 #include <glad/KHR/khrplatform.h>
@@ -27,3 +27,5 @@
 #include <stdarg.h>
 #include <string>
 #include <vector>
+
+#endif //PCH_H
