@@ -28,7 +28,7 @@ const glm::mat4& Camera::getProjectionMatrix()
 
 void Camera::setPosition(const glm::vec3& pos)
 {
-
+	m_pos = pos;
 }
 
 glm::vec3 Camera::getPosition() const
@@ -36,15 +36,63 @@ glm::vec3 Camera::getPosition() const
 	return m_pos;
 }
 
+void Camera::setYaw(float yaw)
+{
+	m_yaw = yaw;
+}
+
+void Camera::setPitch(float pitch)
+{
+	m_pitch = pitch;
+}
+
+float Camera::getYaw() const
+{
+	return m_yaw;
+}
+
+float Camera::getPitch() const
+{
+	return m_pitch;
+}
+
+
+void Camera::setFov(float fov)
+{
+	m_fov = fov;
+}
 
 float Camera::getFov() const
 {
 	return m_fov;
 }
 
-void Camera::move()
+void Camera::move(int direction)
 {
-
+	switch (direction)
+	{
+	case 0:
+		m_pos += m_cameraFront * 0.1f; // TODO: Multiply delta time once its implemented and slightly increase speed
+		break;
+	case 1:
+		m_pos -= m_cameraFront * 0.1f;
+		break;
+	case 2:
+		m_pos -= m_cameraRight * 0.1f;
+		break;
+	case 3:
+		m_pos += m_cameraRight * 0.1f;
+		break;
+	case 4:
+		m_pos += m_cameraUp * 0.1f;
+		break;
+	case 5:
+		m_pos += m_cameraUp * 0.1f;
+		break;
+	default:
+		break;
+	}
+	update();
 }
 
 void Camera::update()

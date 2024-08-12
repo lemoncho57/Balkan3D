@@ -9,6 +9,13 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/vector_angle.hpp>
 
+#define CAMERA_DIRECTION_FRONT	0
+#define CAMERA_DIRECTION_BACK	1
+#define CAMERA_DIRECTION_LEFT	2
+#define CAMERA_DIRECTION_RIGHT	3
+#define CAMERA_DIRECTION_UP		4
+#define CAMERA_DIRECTION_DOWN	5
+
 extern "C" class BALKAN3D_API Camera
 {
 public:
@@ -21,13 +28,19 @@ public:
 	void setPosition(const glm::vec3& pos);
 	glm::vec3 getPosition() const;
 
+	void setYaw(float yaw);
+	void setPitch(float pitch);
+
+	float getYaw() const;
+	float getPitch() const;
+
+	void setFov(float fov);
 	float getFov() const;
 
-	void move();
+	void move(int direction);
 
 private:
 	void update();
-	
 private:
 	
 	glm::mat4 m_viewMatrix;

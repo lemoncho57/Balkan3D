@@ -14,6 +14,11 @@ public:
 
 	bool isKeyPressed(enum KeyCodes::Keys key);
 	bool isKeyReleased(enum KeyCodes::Keys key);
+
+	bool isMouseKeyPressed(enum KeyCodes::MouseKeys key);
+	bool isMouseKeyReleased(enum KeyCodes::MouseKeys key);
+
+	void getMouseCursorPosition(double* x, double* y);
 private:
 	GLFWwindow* m_window;
 };

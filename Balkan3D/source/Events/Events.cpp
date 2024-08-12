@@ -33,3 +33,26 @@ bool Events::isKeyReleased(enum KeyCodes::Keys key)
 
 	return released;
 }
+
+bool Events::isMouseKeyReleased(enum KeyCodes::MouseKeys key)
+{
+	bool pressed = false;
+	if (glfwGetMouseButton(m_window, key) == GLFW_PRESS)
+		pressed = true;
+
+	return pressed;
+}
+
+void Events::getMouseCursorPosition(double* x, double* y)
+{
+	glfwGetCursorPos(m_window, x, y);
+}
+
+bool Events::isMouseKeyPressed(enum KeyCodes::MouseKeys key)
+{
+	bool released = false;
+	if (glfwGetMouseButton(m_window, key) == GLFW_RELEASE)
+		released = true;
+
+	return released;
+}

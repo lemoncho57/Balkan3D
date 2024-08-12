@@ -123,6 +123,21 @@ namespace KeyCodes
 	KEY_RIGHT_ALT		=	346,
 	KEY_RIGHT_SUPER		=	347,
 	KEY_MENU			=	348,
-	} Keys;
+	};
+
+	enum MouseKeys
+	{
+		MOUSE_KEY_1 = 0,
+		MOUSE_KEY_2 = 1,
+		MOUSE_KEY_3 = 2,
+		MOUSE_KEY_4 = 3,
+		MOUSE_KEY_5 = 4,
+		MOUSE_KEY_6 = 5,
+		MOUSE_KEY_7 = 6,
+		MOUSE_KEY_8 = 7,
+		MOUSE_KEY_LEFT = MOUSE_KEY_1,
+		MOUSE_KEY_RIGHT = MOUSE_KEY_2,
+		MOUSE_KEY_MIDDLE = MOUSE_KEY_3
+	};
 }
 #endif //EVENTS_KEYCODES_H

@@ -19,18 +19,19 @@ int main(void)
 	Shader shader(/*Vertex Shader*/ R"(
 					#version 410 core
 					layout (location = 0) in vec3 aPos;
-					layout (location = 1) in vec3 aColor;
-					layout (location = 2) in vec2 aTexCoords;					
+					layout (location = 1) in vec4 aColor;
+					layout (location = 2) in vec2 aTexCoords;
 
-					out vec3 color;
-					out vec2 texCoords;					
+					out vec4 color;
+					out vec2 texCoords;
 
 					uniform mat4 camMatrix;
 					uniform mat4 projMatrix;
+					uniform mat4 modelMatrix;
 
 					void main()
 					{
-						gl_Position = projMatrix * camMatrix * vec4(aPos, 1.0);
+						gl_Position = projMatrix * camMatrix * modelMatrix * vec4(aPos, 1.0);
 						color = aColor;
 						texCoords = aTexCoords;
 					})",
@@ -38,7 +39,7 @@ int main(void)
 					#version 410 core
 					out vec4 fragColor;
 					
-					in vec3 color;
+					in vec4 color;
 					in vec2 texCoords;
 					
 					uniform vec3 userColor;
@@ -56,10 +57,10 @@ int main(void)
 	Mesh mesh;
 	mesh.vertices = 
 	{
-		{{-0.5f, 0.5f, 0.f}, {0.f,0.f,1.f}, {0.f, 1.f}},
-		{{-0.5f,-0.5f,0.f},	{0.f,0.f,1.f}, {0.f, 0.f}},
-		{{0.5f,-0.5f,0.f},	{0.f,0.f,1.f}, {1.f, 0.f}},
-		{{0.5f,0.5f,0.f},	{0.f,0.f,1.f}, {1.f, 1.f}}
+		{{-0.5f, 0.5f, 0.f}, {0.f,0.f,1.f, 1.f}, {0.f, 1.f}},
+		{{-0.5f,-0.5f,0.f},	{0.f,0.f,1.f, 1.f}, {0.f, 0.f}},
+		{{0.5f,-0.5f,0.f},	{0.f,0.f,1.f, 1.f}, {1.f, 0.f}},
+		{{0.5f,0.5f,0.f},	{0.f,0.f,1.f, 1.f}, {1.f, 1.f}}
 	};
 
 	mesh.indices =
@@ -79,27 +80,54 @@ int main(void)
 		window.beginDrawing();
 		GraphicsUtils::clearColor(1.f, 1.f, 0.f, 1.f);
 
-		if (events.isKeyPressed(KeyCodes::KEY_KP_1))
-			shader.setvec3f("userColor", { 1.f,0.f,0.f });
-		else if (events.isKeyPressed(KeyCodes::KEY_KP_2))
-			shader.setvec3f("userColor", { 0.f,1.f,0.f });
-		else if (events.isKeyPressed(KeyCodes::KEY_KP_3))
-			shader.setvec3f("userColor", { 0.f,0.f,1.f });
-		else if (events.isKeyPressed(KeyCodes::KEY_KP_4))
-			shader.setvec3f("userColor", { 1.f,1.f,1.f });
-		else if (events.isKeyPressed(KeyCodes::KEY_KP_0))
-			shader.setvec3f("userColor", { 0.f,0.f,0.f });
+	
+		{
+			if (events.isKeyPressed(KeyCodes::KEY_KP_1))
+				shader.setvec3f("userColor", { 1.f,0.f,0.f });
+			else if (events.isKeyPressed(KeyCodes::KEY_KP_2))
+				shader.setvec3f("userColor", { 0.f,1.f,0.f });
+			else if (events.isKeyPressed(KeyCodes::KEY_KP_3))
+				shader.setvec3f("userColor", { 0.f,0.f,1.f });
+			else if (events.isKeyPressed(KeyCodes::KEY_KP_4))
+				shader.setvec3f("userColor", { 1.f,1.f,1.f });
+			else if (events.isKeyPressed(KeyCodes::KEY_KP_0))
+				shader.setvec3f("userColor", { 0.f,0.f,0.f });
+
+			if (events.isKeyPressed(KeyCodes::KEY_W))
+				camera.move(CAMERA_DIRECTION_FRONT);
+			if (events.isKeyPressed(KeyCodes::KEY_S))
+				camera.move(CAMERA_DIRECTION_BACK);
+			if (events.isKeyPressed(KeyCodes::KEY_A))
+				camera.move(CAMERA_DIRECTION_LEFT);
+			if (events.isKeyPressed(KeyCodes::KEY_D))
+				camera.move(CAMERA_DIRECTION_RIGHT);
+			if (events.isKeyPressed(KeyCodes::KEY_SPACE))
+				camera.move(CAMERA_DIRECTION_UP);
+			if (events.isKeyPressed(KeyCodes::KEY_LEFT_CONTROL))
+				camera.move(CAMERA_DIRECTION_DOWN);
+
+			if (events.isKeyPressed(KeyCodes::KEY_RIGHT))
+				camera.setYaw(camera.getYaw() + 0.3f);
+			if (events.isKeyPressed(KeyCodes::KEY_LEFT))
+				camera.setYaw(camera.getYaw() - 0.3f);
+			if (events.isKeyPressed(KeyCodes::KEY_DOWN))
+				camera.setPitch(camera.getPitch() - 0.3f);
+			if (events.isKeyPressed(KeyCodes::KEY_UP))
+				camera.setPitch(camera.getPitch() + 0.3f);
+
+			//if (events.isKeyPressed(KeyCodes::KEY_UP))
+			//	mesh.setPosition({ mesh.getPosition().x, mesh.getPosition().y + 0.03f, mesh.getPosition().z }); // Needs to be multiplied by delta
+			//else
+			//	mesh.setPosition(mesh.getPosition());
+		}
 
 		shader.set1i("tex", 0);
 		shader.set1i("tex2", 1);
-		//shader.setmat4fv("projMatrix", camera.getProjectionMatrix(), GL_FALSE);
-		glm::mat4 view = camera.getViewMatrix();
-		shader.setmat4fv("camMatrix", view, GL_FALSE);
-		glm::mat4 proj = camera.getProjectionMatrix();
-		shader.setmat4fv("projMatrix", proj, GL_FALSE);
+		shader.setmat4fv("camMatrix", camera.getViewMatrix(), GL_FALSE);
+		shader.setmat4fv("projMatrix", camera.getProjectionMatrix(), GL_FALSE);
+		shader.setmat4fv("modelMatrix", mesh.getModelMatrix(), GL_FALSE);
 		shader.use();
-
-
+		
 		texture.activateTexture(GL_TEXTURE0);
 		texture.bind();
 		texture2.activateTexture(GL_TEXTURE1);
