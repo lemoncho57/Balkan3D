@@ -11,8 +11,8 @@ public:
 
 	void activateTexture(GLenum texure);
 
-	void bind();
-	void unbind();
+	void use();
+	void unuse();
 
 private:
 	int m_width;

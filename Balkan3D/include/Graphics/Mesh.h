@@ -19,7 +19,6 @@ extern "C" class BALKAN3D_API Mesh
 {
 public:
 	Mesh(glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f));
-	//Mesh(glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f));
 	~Mesh();
 
 	//void use(); // This is already done in draw
@@ -28,6 +27,9 @@ public:
 	void submit();
 
 	const glm::mat4& getModelMatrix();
+
+	static Mesh* Plane(glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f), glm::vec4 color = glm::vec4(1.f,1.f,1.f,1.f));
+	static Mesh* Cube(glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f), glm::vec4 color = glm::vec4(1.f,1.f,1.f,1.f));
 
 	void setPosition(glm::vec3 transform);
 	void setRotation(glm::vec3 rotation);

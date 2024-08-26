@@ -1,6 +1,6 @@
 #ifndef WINDOW_H
 #define WINDOW_H
-#include "pch.h"
+#include "Time/Clock.h"
 
 extern "C" class BALKAN3D_API Window
 {
@@ -16,16 +16,17 @@ public:
 
 	void swapBuffers();
 
-	GLFWwindow* getWindow() const;
+	void* getWindow() const;
 	int getWidth() const;
 	int getHeight() const;
 	void setSize(int width, int height);
 	bool shouldClose() const;
 
+
 private:
 	char* m_title;
 	int m_width;
 	int m_height;
-	GLFWwindow* m_window;
+	void* m_window;
 };
 #endif //WINDOW_H

@@ -1,6 +1,5 @@
 #ifndef EVENTS_EVENTS_H
 #define EVENTS_EVENTS_H
-#include "pch.h"
 
 enum Keys;
 
@@ -20,6 +19,6 @@ public:
 
 	void getMouseCursorPosition(double* x, double* y);
 private:
-	GLFWwindow* m_window;
+	void* m_window;
 };
 #endif //EVENTS_EVENTS_H

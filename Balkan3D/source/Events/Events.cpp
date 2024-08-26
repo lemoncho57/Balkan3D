@@ -18,7 +18,7 @@ bool Events::isKeyPressed(enum KeyCodes::Keys key)
 {
 	bool pressed = false;
 	
-	if (glfwGetKey(m_window, key) == GLFW_PRESS)
+	if (glfwGetKey((GLFWwindow*)m_window, key) == GLFW_PRESS)
 		pressed = true;
 	
 	return pressed;
@@ -28,7 +28,7 @@ bool Events::isKeyReleased(enum KeyCodes::Keys key)
 {
 	bool released = false;
 
-	if (glfwGetKey(m_window, key) == GLFW_RELEASE)
+	if (glfwGetKey((GLFWwindow*)m_window, key) == GLFW_RELEASE)
 		released = true;
 
 	return released;
@@ -37,7 +37,7 @@ bool Events::isKeyReleased(enum KeyCodes::Keys key)
 bool Events::isMouseKeyReleased(enum KeyCodes::MouseKeys key)
 {
 	bool pressed = false;
-	if (glfwGetMouseButton(m_window, key) == GLFW_PRESS)
+	if (glfwGetMouseButton((GLFWwindow*)m_window, key) == GLFW_PRESS)
 		pressed = true;
 
 	return pressed;
@@ -45,13 +45,13 @@ bool Events::isMouseKeyReleased(enum KeyCodes::MouseKeys key)
 
 void Events::getMouseCursorPosition(double* x, double* y)
 {
-	glfwGetCursorPos(m_window, x, y);
+	glfwGetCursorPos((GLFWwindow*)m_window, x, y);
 }
 
 bool Events::isMouseKeyPressed(enum KeyCodes::MouseKeys key)
 {
 	bool released = false;
-	if (glfwGetMouseButton(m_window, key) == GLFW_RELEASE)
+	if (glfwGetMouseButton((GLFWwindow*)m_window, key) == GLFW_RELEASE)
 		released = true;
 
 	return released;

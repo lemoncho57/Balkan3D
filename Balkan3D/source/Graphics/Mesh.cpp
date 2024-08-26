@@ -43,7 +43,6 @@ Mesh::~Mesh()
 
 void Mesh::draw()
 {
-	update();
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 }
@@ -80,23 +79,89 @@ void Mesh::submit()
 
 const glm::mat4& Mesh::getModelMatrix()
 {
-	update();
 	return m_modelMatrix;
+}
+
+Mesh* Mesh::Plane(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, glm::vec4 color)
+{
+	Mesh* mesh = new Mesh(transform, rotation, scale);
+
+	mesh->vertices =
+	{
+		{{-0.5f, 0.5f, 0.f}, color, {0.f, 1.f}},
+		{{-0.5f,-0.5f,0.f},	color, {0.f, 0.f}},
+		{{0.5f,-0.5f,0.f},	color, {1.f, 0.f}},
+		{{0.5f,0.5f,0.f},	color, {1.f, 1.f}}
+	};
+	mesh->indices = 
+	{
+		0,1,2,
+		0,2,3
+	};
+
+	mesh->submit();
+
+	return mesh;
+}
+
+Mesh* Mesh::Cube(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, glm::vec4 color)
+{
+	Mesh* mesh = new Mesh(transform, rotation, scale);
+
+	mesh->vertices =
+	{
+		{{-0.5f, 0.5f, 0.5f}, color, {0.f, 1.f}},	//0 Front up left
+		{{-0.5f,-0.5f,0.5f}, color, {0.f, 0.f}},	//1 Front down left
+		{{0.5f,-0.5f,0.5f},	color, {1.f, 0.f}},		//2 Front down right
+		{{0.5f,0.5f,0.5f},	color, {1.f, 1.f}},		//3 Front up right
+
+		{{-0.5f, 0.5f, -0.5f}, color, {0.f, 1.f}},	//4 Back up left
+		{{-0.5f, -0.5f, -0.5f}, color, {0.f, 0.f}},	//5 Back down left
+		{{0.5, -0.5f, -0.5f}, color, {1.f, 0.f}},	//6 Back down right
+		{{0.5f,0.5f,-0.5f},	color, {1.f, 1.f}},		//7 Back up right
+	};
+
+	mesh->indices =
+	{
+		0,1,2, // Front
+		0,2,3,
+
+		0,1,5, // Left
+		0,5,4,
+
+		4,5,6, // Back
+		4,6,7,
+
+		3,2,6, // Right
+		3,6,7,
+
+		0,3,4, // Up
+		4,3,7,
+
+		1,2,5,
+		5,2,6
+	};
+
+	mesh->submit();
+	return mesh;
 }
 
 void Mesh::setPosition(glm::vec3 transform)
 {
 	m_transform = transform;
+	update();
 }
 
 void Mesh::setRotation(glm::vec3 rotation)
 {
 	m_rotation = rotation;
+	update();
 }
 
 void Mesh::setScale(glm::vec3 scale)
 {
 	m_scale = scale;
+	update();
 }
 
 glm::vec3 Mesh::getPosition() const

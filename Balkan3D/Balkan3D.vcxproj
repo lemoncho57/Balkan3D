@@ -41,6 +41,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="source\Time\Clock.cpp" />
     <ClCompile Include="source\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +55,7 @@
     <ClInclude Include="include\Logging\Asserts.h" />
     <ClInclude Include="include\Logging\Loging.h" />
     <ClInclude Include="include\pch.h" />
+    <ClInclude Include="include\Time\Clock.h" />
     <ClInclude Include="include\Window.h" />
     <ClInclude Include="include\Events\KeyCodes.h" />
   </ItemGroup>

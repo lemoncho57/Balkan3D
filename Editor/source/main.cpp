@@ -6,6 +6,7 @@
 #include <Balkan3D/include/Graphics/Mesh.h>
 #include <Balkan3D/include/Graphics/Texture.h>
 #include <Balkan3D/include/Graphics/Camera.h>
+#include <Balkan3D/include/Time/Clock.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <string>
@@ -54,20 +55,21 @@ int main(void)
 
 	Camera camera(glm::vec3(0.f, 0.f, 3.f), 50.f,(float) window.getWidth() / (float) window.getHeight());
 
-	Mesh mesh;
-	mesh.vertices = 
-	{
-		{{-0.5f, 0.5f, 0.f}, {0.f,0.f,1.f, 1.f}, {0.f, 1.f}},
-		{{-0.5f,-0.5f,0.f},	{0.f,0.f,1.f, 1.f}, {0.f, 0.f}},
-		{{0.5f,-0.5f,0.f},	{0.f,0.f,1.f, 1.f}, {1.f, 0.f}},
-		{{0.5f,0.5f,0.f},	{0.f,0.f,1.f, 1.f}, {1.f, 1.f}}
-	};
+	Mesh& mesh = *Mesh::Cube(); // the textures are not correct
+	//mesh.setPosition({ 0.f, 1.f,0.f });
+	//mesh.vertices = 
+	//{
+	//	{{-0.5f, 0.5f, 0.f}, {0.f,0.f,1.f, 1.f}, {0.f, 1.f}},
+	//	{{-0.5f,-0.5f,0.f},	{0.f,0.f,1.f, 1.f}, {0.f, 0.f}},
+	//	{{0.5f,-0.5f,0.f},	{0.f,0.f,1.f, 1.f}, {1.f, 0.f}},
+	//	{{0.5f,0.5f,0.f},	{0.f,0.f,1.f, 1.f}, {1.f, 1.f}}
+	//};
 
-	mesh.indices =
-	{
-		0,1,2,
-		0,2,3
-	};
+	//mesh.indices =
+	//{
+	//	0,1,2,
+	//	0,2,3
+	//};
 
 	Texture texture("Ne_e_shoferska.png");
 	Texture texture2("Bira.png");
@@ -77,10 +79,10 @@ int main(void)
 
 	while(!window.shouldClose())
 	{
+		Clock::update(30);
 		window.beginDrawing();
 		GraphicsUtils::clearColor(1.f, 1.f, 0.f, 1.f);
 
-	
 		{
 			if (events.isKeyPressed(KeyCodes::KEY_KP_1))
 				shader.setvec3f("userColor", { 1.f,0.f,0.f });
@@ -107,19 +109,20 @@ int main(void)
 				camera.move(CAMERA_DIRECTION_DOWN);
 
 			if (events.isKeyPressed(KeyCodes::KEY_RIGHT))
-				camera.setYaw(camera.getYaw() + 0.3f);
+				camera.setYaw(camera.getYaw() + 35.f * Clock::getDeltaTime());
 			if (events.isKeyPressed(KeyCodes::KEY_LEFT))
-				camera.setYaw(camera.getYaw() - 0.3f);
+				camera.setYaw(camera.getYaw() - 35.f * Clock::getDeltaTime());
 			if (events.isKeyPressed(KeyCodes::KEY_DOWN))
-				camera.setPitch(camera.getPitch() - 0.3f);
+				camera.setPitch(camera.getPitch() - 35.f * Clock::getDeltaTime());
 			if (events.isKeyPressed(KeyCodes::KEY_UP))
-				camera.setPitch(camera.getPitch() + 0.3f);
-
+				camera.setPitch(camera.getPitch() + 35.f * Clock::getDeltaTime());
+			if (events.isKeyPressed(KeyCodes::KEY_R))
+				camera.setPosition({ 0.f,0.f,0.f });
 			//if (events.isKeyPressed(KeyCodes::KEY_UP))
 			//	mesh.setPosition({ mesh.getPosition().x, mesh.getPosition().y + 0.03f, mesh.getPosition().z }); // Needs to be multiplied by delta
 			//else
 			//	mesh.setPosition(mesh.getPosition());
-		}
+		};
 
 		shader.set1i("tex", 0);
 		shader.set1i("tex2", 1);
@@ -129,17 +132,16 @@ int main(void)
 		shader.use();
 		
 		texture.activateTexture(GL_TEXTURE0);
-		texture.bind();
+		texture.use();
 		texture2.activateTexture(GL_TEXTURE1);
-		texture2.bind();
-		mesh.submit();
+		texture2.use();
 		mesh.draw();
 
 		if (events.isKeyPressed(KeyCodes::KEY_ESCAPE))
 			window.close();
 
-		texture.unbind();
-		texture2.unbind();
+		texture.unuse();
+		texture2.unuse();
 		shader.unuse();
 		window.endDrawing();
 	}

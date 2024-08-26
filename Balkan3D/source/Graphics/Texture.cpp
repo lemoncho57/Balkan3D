@@ -37,12 +37,12 @@ void Texture::activateTexture(GLenum texure)
 	glActiveTexture(texure);
 }
 
-void Texture::bind()
+void Texture::use()
 {
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 }
 
-void Texture::unbind()
+void Texture::unuse()
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }

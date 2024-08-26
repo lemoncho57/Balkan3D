@@ -20,22 +20,22 @@ void logOutput(logType type, const char* message, ...)
 	switch (type)
 	{
 	case FATAL_LOG:
-		printf("{FATAL}: ");
+		fprintf(stderr,"{FATAL}: ");
 		break;
 	case ERROR_LOG:
-		printf("{ERROR}: ");
+		fprintf(stderr,"{ERROR}: ");
 		break;
 	case WARNING_LOG:
-		printf("{WARNING}: ");
+		fprintf(stdout,"{WARNING}: ");
 		break;
 	case INFO_LOG:
-		printf("{INFO}: ");
+		fprintf(stdout,"{INFO}: ");
 		break;
 	default:
 		break;
 	}
 
 	vprintf(message, args);
-	printf("\n");
+	fprintf(type == FATAL_LOG || type == ERROR_LOG ? stderr : stdout,"\n");
 	va_end(args);
 }

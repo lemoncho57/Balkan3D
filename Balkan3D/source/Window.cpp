@@ -2,7 +2,7 @@
 #include "Window.h"
 
 Window::Window(const char* title, int width, int height)
-	: m_title((char*) title), m_width(width), m_height(height)
+	: m_title((char*)title), m_width(width), m_height(height)
 {
 	BALKAN3D_ASSERT(glfwInit(), "Unable to initialize GLFW!");
 
@@ -11,9 +11,9 @@ Window::Window(const char* title, int width, int height)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	m_window = glfwCreateWindow(width, height, title, NULL, NULL);
 	BALKAN3D_ASSERT(m_window, "Unable to create window");
-	
-	glfwMakeContextCurrent(m_window);
-	
+
+	glfwMakeContextCurrent((GLFWwindow*)m_window);
+
 	BALKAN3D_ASSERT(gladLoadGL(), "Unable to load OpenGL");
 	BALKAN3D_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Unable to initialize glad");
 
@@ -27,34 +27,36 @@ Window::~Window()
 
 void Window::beginDrawing()
 {
-	glfwGetFramebufferSize(m_window, &m_width, &m_height);
+
+	glfwGetFramebufferSize((GLFWwindow*)m_window, &m_width, &m_height);
 	glViewport(0, 0, m_width, m_height);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 }
 
 void Window::endDrawing()
 {
-	glfwSwapBuffers(m_window);
+	glfwSwapBuffers((GLFWwindow*)m_window);
 	glfwPollEvents();
 }
 
 void Window::close()
 {
-	glfwSetWindowShouldClose(m_window, GLFW_TRUE);
+	glfwSetWindowShouldClose((GLFWwindow*)m_window, GLFW_TRUE);
 }
 
 void Window::swapBuffers()
 {
-	glfwSwapBuffers(m_window);
+	glfwSwapBuffers((GLFWwindow*)m_window);
 }
 
 void Window::release()
 {
-	glfwDestroyWindow(m_window);
+	glfwDestroyWindow((GLFWwindow*)m_window);
 	glfwTerminate();
 }
 
-GLFWwindow* Window::getWindow() const
+void* Window::getWindow() const
 {
 	return m_window;
 }
@@ -71,12 +73,10 @@ int Window::getHeight() const
 
 void Window::setSize(int width, int height)
 {
-	glfwSetWindowSize(m_window, width, height);
+	glfwSetWindowSize((GLFWwindow*)m_window, width, height);
 }
 
 bool Window::shouldClose() const
 {
-	return glfwWindowShouldClose(m_window);
+	return glfwWindowShouldClose((GLFWwindow*)m_window);
 }
-
-

@@ -71,23 +71,23 @@ void Camera::move(int direction)
 {
 	switch (direction)
 	{
-	case 0:
-		m_pos += m_cameraFront * 0.1f; // TODO: Multiply delta time once its implemented and slightly increase speed
+	case CAMERA_DIRECTION_FRONT:
+		m_pos += m_cameraFront * 1.5f * Clock::getDeltaTime(); // TODO: Multiply delta time once its implemented and slightly increase speed
 		break;
-	case 1:
-		m_pos -= m_cameraFront * 0.1f;
+	case CAMERA_DIRECTION_BACK:
+		m_pos -= m_cameraFront * 1.5f * Clock::getDeltaTime();
 		break;
-	case 2:
-		m_pos -= m_cameraRight * 0.1f;
+	case CAMERA_DIRECTION_LEFT:
+		m_pos -= m_cameraRight * 1.5f * Clock::getDeltaTime();
 		break;
-	case 3:
-		m_pos += m_cameraRight * 0.1f;
+	case CAMERA_DIRECTION_RIGHT:
+		m_pos += m_cameraRight * 1.5f * Clock::getDeltaTime();
 		break;
-	case 4:
-		m_pos += m_cameraUp * 0.1f;
+	case CAMERA_DIRECTION_UP:
+		m_pos += m_cameraUp * 1.5f * Clock::getDeltaTime();
 		break;
-	case 5:
-		m_pos += m_cameraUp * 0.1f;
+	case CAMERA_DIRECTION_DOWN:
+		m_pos -= m_cameraUp * 1.5f * Clock::getDeltaTime();
 		break;
 	default:
 		break;
