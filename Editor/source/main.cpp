@@ -7,8 +7,6 @@
 #include <Balkan3D/include/Graphics/Texture.h>
 #include <Balkan3D/include/Graphics/Camera.h>
 #include <Balkan3D/include/Time/Clock.h>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include <string>
 
 // Code is just for testing

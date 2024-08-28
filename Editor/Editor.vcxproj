@@ -114,12 +114,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Visual Studio Projects\Balkan3D\vendors\include;D:\Visual Studio Projects\Balkan3D\;D:\Visual Studio Projects\Balkan3D\Editor\include;D:\Visual Studio Projects\Balkan3D\vendors\include\glad;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\vendors\include;$(SolutionDir)\vendors\include\glad;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\Visual Studio Projects\Balkan3D;D:\Visual Studio Projects\Balkan3D\vendors\lib;D:\Visual Studio Projects\Balkan3D\vendors\lib\GLFW;D:\Visual Studio Projects\Balkan3D\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir);$(SolutionDir)\vendors\lib;$(SolutionDir)\vendors\lib\GLFW;$(SolutionDir)\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;Balkan3D.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
