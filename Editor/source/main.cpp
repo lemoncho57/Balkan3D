@@ -73,7 +73,9 @@ int main(void)
 	Texture texture2("Bira.png");
 
 	events.setCurrentWindow(&window);
+	shader.use();
 	shader.setvec3f("userColor", { 1.f,1.f,1.f });
+	shader.unuse();
 
 	while(!window.shouldClose())
 	{
@@ -122,12 +124,12 @@ int main(void)
 			//	mesh.setPosition(mesh.getPosition());
 		};
 
+		shader.use();
 		shader.set1i("tex", 0);
 		shader.set1i("tex2", 1);
 		shader.setmat4fv("camMatrix", camera.getViewMatrix(), GL_FALSE);
 		shader.setmat4fv("projMatrix", camera.getProjectionMatrix(), GL_FALSE);
 		shader.setmat4fv("modelMatrix", mesh.getModelMatrix(), GL_FALSE);
-		shader.use();
 		
 		texture.activateTexture(GL_TEXTURE0);
 		texture.use();

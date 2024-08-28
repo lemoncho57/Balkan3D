@@ -57,51 +57,37 @@ void Shader::unuse()
 
 void Shader::set1i(const char* name, GLint value)
 {
-	use();
 	glUniform1i(glGetUniformLocation(m_id, name), value);
-	unuse();
 }
 
 void Shader::set1f(const char* name, GLfloat value)
 {
-	use();
 	glUniform1f(glGetUniformLocation(m_id, name), value);
-	unuse();
 }
 
 void Shader::setvec2f(const char* name, glm::fvec2 value)
 {
-	use();
 	glUniform2fv(glGetUniformLocation(m_id, name), 1, glm::value_ptr(value));
-	unuse();
 }
 
 void Shader::setvec3f(const char* name, glm::fvec3 value)
 {
-	use();
 	glUniform3fv(glGetUniformLocation(m_id, name), 1, glm::value_ptr(value));
-	unuse();
 }
 
 void Shader::setvec4f(const char* name, glm::fvec4 value)
 {
-	use();
 	glUniform4fv(glGetUniformLocation(m_id, name), 1, glm::value_ptr(value));
-	unuse();
 }
 
 void Shader::setmat3fv(const char* name, glm::fmat3 value, GLboolean transpose)
 {
-	use();
 	glUniformMatrix3fv(glGetUniformLocation(m_id, name), 1, transpose, glm::value_ptr(value));
-	unuse();
 }
 
 void Shader::setmat4fv(const char* name, glm::fmat4 value, GLboolean transpose)
 {
-	use();
 	glUniformMatrix4fv(glGetUniformLocation(m_id, name), 1, transpose, glm::value_ptr(value));
-	unuse();
 }
 
 GLuint Shader::getId() const
