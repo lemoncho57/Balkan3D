@@ -1,14 +1,24 @@
 #include "pch.h"
 #include "Time/Clock.h"
 
+void Clock::init()
+{
+	m_last = (float) glfwGetTime();
+}
+
 void Clock::update(float targetFps)
 {
-	m_targetFps = 1.f / targetFps;
+	m_frameDuration = 1.f / targetFps;
 	m_current = (float) glfwGetTime();
 	m_deltaTime = m_current - m_last;
 
-	if (m_current - m_last >= m_targetFps)
-		m_last = m_current;
+	while (m_deltaTime < m_frameDuration)
+	{
+		m_current = (float) glfwGetTime();
+		m_deltaTime = m_current - m_last;
+	}
+
+	m_last = m_current;
 }
 
 float Clock::getDeltaTime()
@@ -16,12 +26,12 @@ float Clock::getDeltaTime()
 	return m_deltaTime;
 }
 
-float Clock::getTargetFps()
+float Clock::getFrameDuration()
 {
-	return m_targetFps;
+	return m_frameDuration;
 }
 
-float Clock::m_targetFps;
+float Clock::m_frameDuration;
 
 float Clock::m_current;
 

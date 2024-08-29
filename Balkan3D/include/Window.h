@@ -8,7 +8,7 @@ public:
 	Window(const char* title, int width, int height);
 	~Window();
 
-	void beginDrawing();
+	void beginDrawing(float frameRate = 60);
 	void endDrawing();
 
 	void close();

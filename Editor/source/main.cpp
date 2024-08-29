@@ -77,10 +77,10 @@ int main(void)
 	shader.setvec3f("userColor", { 1.f,1.f,1.f });
 	shader.unuse();
 
+	int fps = 30.f;
 	while(!window.shouldClose())
 	{
-		Clock::update(30);
-		window.beginDrawing();
+		window.beginDrawing(fps);
 		GraphicsUtils::clearColor(1.f, 1.f, 0.f, 1.f);
 
 		{
@@ -118,6 +118,11 @@ int main(void)
 				camera.setPitch(camera.getPitch() + 35.f * Clock::getDeltaTime());
 			if (events.isKeyPressed(KeyCodes::KEY_R))
 				camera.setPosition({ 0.f,0.f,0.f });
+
+			if (events.isKeyPressed(KeyCodes::KEY_KP_ADD))
+				fps += 1.f;
+			else if (events.isKeyPressed(KeyCodes::KEY_KP_SUBTRACT))
+				fps -= 1.f;
 			//if (events.isKeyPressed(KeyCodes::KEY_UP))
 			//	mesh.setPosition({ mesh.getPosition().x, mesh.getPosition().y + 0.03f, mesh.getPosition().z }); // Needs to be multiplied by delta
 			//else

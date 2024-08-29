@@ -18,6 +18,7 @@ Window::Window(const char* title, int width, int height)
 	BALKAN3D_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Unable to initialize glad");
 
 	glEnable(GL_DEPTH_TEST);
+	Clock::init();
 }
 
 Window::~Window()
@@ -25,8 +26,9 @@ Window::~Window()
 	close();
 }
 
-void Window::beginDrawing()
+void Window::beginDrawing(float frameRate)
 {
+	Clock::update(frameRate);
 	glfwGetFramebufferSize((GLFWwindow*)m_window, &m_width, &m_height);
 	glViewport(0, 0, m_width, m_height);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
