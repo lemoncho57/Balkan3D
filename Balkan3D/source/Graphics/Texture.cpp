@@ -28,8 +28,7 @@ Texture::Texture(const char* fileName, bool flipImage)
 
 Texture::~Texture()
 {
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glDeleteTextures(1, &m_texture);
+
 }
 
 void Texture::activateTexture(GLenum texure)

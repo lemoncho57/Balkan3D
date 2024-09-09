@@ -77,7 +77,7 @@ int main(void)
 	shader.setvec3f("userColor", { 1.f,1.f,1.f });
 	shader.unuse();
 
-	int fps = 30.f;
+	int fps = 165.f;
 	while(!window.shouldClose())
 	{
 		window.beginDrawing(fps);
@@ -109,13 +109,13 @@ int main(void)
 				camera.move(CAMERA_DIRECTION_DOWN);
 
 			if (events.isKeyPressed(KeyCodes::KEY_RIGHT))
-				camera.setYaw(camera.getYaw() + 35.f * Clock::getDeltaTime());
+				camera.setYaw(camera.getYaw() + 70.f * Clock::getDeltaTime());
 			if (events.isKeyPressed(KeyCodes::KEY_LEFT))
-				camera.setYaw(camera.getYaw() - 35.f * Clock::getDeltaTime());
+				camera.setYaw(camera.getYaw() - 70.f * Clock::getDeltaTime());
 			if (events.isKeyPressed(KeyCodes::KEY_DOWN))
-				camera.setPitch(camera.getPitch() - 35.f * Clock::getDeltaTime());
+				camera.setPitch(camera.getPitch() - 70.f * Clock::getDeltaTime());
 			if (events.isKeyPressed(KeyCodes::KEY_UP))
-				camera.setPitch(camera.getPitch() + 35.f * Clock::getDeltaTime());
+				camera.setPitch(camera.getPitch() + 70.f * Clock::getDeltaTime());
 			if (events.isKeyPressed(KeyCodes::KEY_R))
 				camera.setPosition({ 0.f,0.f,0.f });
 

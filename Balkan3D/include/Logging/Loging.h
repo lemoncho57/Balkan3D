@@ -1,6 +1,6 @@
 #ifndef LOGGING_LOGING_H
 #define LOGGING_LOGING_H
-#include "pch.h"
+#include "Core.h"
 
 typedef enum logType
 {

@@ -20,16 +20,16 @@ void logOutput(logType type, const char* message, ...)
 	switch (type)
 	{
 	case FATAL_LOG:
-		fprintf(stderr,"{FATAL}: ");
+		fprintf(stderr, "{FATAL}: ");
 		break;
 	case ERROR_LOG:
-		fprintf(stderr,"{ERROR}: ");
+		fprintf(stderr, "{ERROR}: ");
 		break;
 	case WARNING_LOG:
-		fprintf(stdout,"{WARNING}: ");
+		fprintf(stdout, "{WARNING}: ");
 		break;
 	case INFO_LOG:
-		fprintf(stdout,"{INFO}: ");
+		fprintf(stdout, "{INFO}: ");
 		break;
 	default:
 		break;

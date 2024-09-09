@@ -10,7 +10,13 @@ target_include_directories(Balkan3DEngine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc
 target_include_directories(Balkan3DEngine PUBLIC ${CMAKE_SOURCE_DIR}/vendors/include)
 target_include_directories(Balkan3DEngine PUBLIC ${CMAKE_SOURCE_DIR}/vendors/include/glad)
 #target_link_directories(Balkan3DEngine PUBLIC ${CMAKE_SOURCE_DIR}/vendors/lib)
+if(WIN32)
 target_link_libraries(Balkan3DEngine PUBLIC ${CMAKE_SOURCE_DIR}/vendors/lib/GLFW/glfw3.lib)
+else()
+target_link_libraries(Balkan3DEngine PUBLIC /usr/lib64/libglfw.so.3)
+endif(WIN32)
+
+
 target_compile_definitions(Balkan3DEngine PUBLIC BALKAN3D_EXPORT)
 
-install(TARGETS Balkan3DEngine LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+#install(TARGETS Balkan3DEngine LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)

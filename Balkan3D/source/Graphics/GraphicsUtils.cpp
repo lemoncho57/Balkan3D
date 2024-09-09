@@ -1,8 +1,9 @@
 #include "pch.h"
+#include "Graphics/GraphicsUtils.h"
 
 namespace GraphicsUtils
 {
-	void GraphicsUtils::clearColor(float r, float g, float b, float a)
+	void clearColor(float r, float g, float b, float a)
 	{
 		glClearColor((GLfloat)r, (GLfloat)g, (GLfloat)b, (GLfloat)a);
 	}

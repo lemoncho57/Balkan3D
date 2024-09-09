@@ -6,7 +6,11 @@
 #define ASSERTIONS_ENABLE
 
 #ifdef ASSERTIONS_ENABLE
+#ifdef _MSV_VER
 #define debugBreak() __debugbreak()
+#else
+#define debugBreak() __builtin_trap()
+#endif
 #else
 #define debugBreak()
 #endif // ASSERTIONS_ENABLE
@@ -22,7 +26,6 @@ extern "C" BALKAN3D_API void reportAssert(const char* expression, const char* me
 			}															\
 																		\
 		}													
-
 
 #ifdef _DEBUG
 #define BALKAN3D_ASSERT_DEBUG(expression, message)	BALKAN3D_ASSERT(expression, message)										

@@ -1,7 +1,6 @@
 #ifndef EVENTS_EVENTS_H
 #define EVENTS_EVENTS_H
-
-enum Keys;
+#include "Core.h"
 
 extern "C" class BALKAN3D_API Events
 {
