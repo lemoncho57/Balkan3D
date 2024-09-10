@@ -16,41 +16,43 @@ int main(void)
 	Window window("Idk", 1280, 720);
 	Events events;
 
-	Shader shader(/*Vertex Shader*/ R"(
-					#version 410 core
-					layout (location = 0) in vec3 aPos;
-					layout (location = 1) in vec4 aColor;
-					layout (location = 2) in vec2 aTexCoords;
+	// Shader shader(/*Vertex Shader*/ R"(
+	// 				#version 410 core
+	// 				layout (location = 0) in vec3 aPos;
+	// 				layout (location = 1) in vec4 aColor;
+	// 				layout (location = 2) in vec2 aTexCoords;
 
-					out vec4 color;
-					out vec2 texCoords;
+	// 				out vec4 color;
+	// 				out vec2 texCoords;
 
-					uniform mat4 camMatrix;
-					uniform mat4 projMatrix;
-					uniform mat4 modelMatrix;
+	// 				uniform mat4 camMatrix;
+	// 				uniform mat4 projMatrix;
+	// 				uniform mat4 modelMatrix;
 
-					void main()
-					{
-						gl_Position = projMatrix * camMatrix * modelMatrix * vec4(aPos, 1.0);
-						color = aColor;
-						texCoords = aTexCoords;
-					})",
-					/*Fragment*/R"(
-					#version 410 core
-					out vec4 fragColor;
+	// 				void main()
+	// 				{
+	// 					gl_Position = projMatrix * camMatrix * modelMatrix * vec4(aPos, 1.0);
+	// 					color = aColor;
+	// 					texCoords = aTexCoords;
+	// 				})",
+	// 				/*Fragment*/R"(
+	// 				#version 410 core
+	// 				out vec4 fragColor;
 					
-					in vec4 color;
-					in vec2 texCoords;
+	// 				in vec4 color;
+	// 				in vec2 texCoords;
 					
-					uniform vec3 userColor;
-					uniform sampler2D tex;
-					uniform sampler2D tex2;
+	// 				uniform vec3 userColor;
+	// 				uniform sampler2D tex;
+	// 				uniform sampler2D tex2;
 			
-					void main()
-					{
-						fragColor = mix(texture(tex, texCoords), texture(tex2, texCoords), 0.4) * vec4(userColor, 1.0);
-					}
-					)");
+	// 				void main()
+	// 				{
+	// 					fragColor = mix(texture(tex, texCoords), texture(tex2, texCoords), 0.4) * vec4(userColor, 1.0);
+	// 				}
+	// 				)");
+
+	Shader shader((const char*)"vertex.glsl", (const char*)"fragment.glsl");
 
 	Camera camera(glm::vec3(0.f, 0.f, 3.f), 50.f,(float) window.getWidth() / (float) window.getHeight());
 
@@ -63,6 +65,7 @@ int main(void)
 	//	{{0.5f,-0.5f,0.f},	{0.f,0.f,1.f, 1.f}, {1.f, 0.f}},
 	//	{{0.5f,0.5f,0.f},	{0.f,0.f,1.f, 1.f}, {1.f, 1.f}}
 	//};
+	Mesh& mesh2 = *Mesh::Plane();
 
 	//mesh.indices =
 	//{
@@ -77,6 +80,7 @@ int main(void)
 	shader.use();
 	shader.setvec3f("userColor", { 1.f,1.f,1.f });
 	shader.unuse();
+	mesh2.setPosition({0,0,-3});
 
 	int fps = 165.f;
 	while(!window.shouldClose())
@@ -135,13 +139,15 @@ int main(void)
 		shader.set1i("tex2", 1);
 		shader.setmat4fv("camMatrix", camera.getViewMatrix(), GL_FALSE);
 		shader.setmat4fv("projMatrix", camera.getProjectionMatrix(), GL_FALSE);
-		shader.setmat4fv("modelMatrix", mesh.getModelMatrix(), GL_FALSE);
 		
 		texture.activateTexture(GL_TEXTURE0);
 		texture.use();
 		texture2.activateTexture(GL_TEXTURE1);
 		texture2.use();
+		shader.setmat4fv("modelMatrix", mesh.getModelMatrix(), GL_FALSE);
 		mesh.draw();
+		shader.setmat4fv("modelMatrix", mesh2.getModelMatrix(), GL_FALSE);
+		mesh2.draw();
 
 		if (events.isKeyPressed(KeyCodes::KEY_ESCAPE))
 			window.close();

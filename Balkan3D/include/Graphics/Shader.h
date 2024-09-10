@@ -15,6 +15,7 @@ extern "C" class BALKAN3D_API Shader
 {
 public:
 	Shader(std::string vertex, std::string fragment);
+	Shader(const char* vertexPath, const char* fragmentPath);
 	~Shader();
 
 	void use();

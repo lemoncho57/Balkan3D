@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Graphics/Shader.h"
 #include "Logging/Loging.h"
+#include <fstream>
+#include <sstream>
 
 Shader::Shader(std::string vertex, std::string fragment)
 {
@@ -35,6 +37,77 @@ Shader::Shader(std::string vertex, std::string fragment)
 	glAttachShader(m_id, m_vertexShader);
 	glAttachShader(m_id, m_fragmentShader);
 	glLinkProgram(m_id);
+}
+
+Shader::Shader(const char* vertexPath, const char* fragmentPath)
+{
+	std::ostringstream vstream;
+	std::ostringstream fstream;
+
+	std::string vsource;
+	std::string fsource;
+
+	std::ifstream file(vertexPath);
+	if (!file.is_open())
+	{
+		LOG_ERROR("Cannot open vertex shader in path: %s", vertexPath);
+		return;
+	}
+	
+	vstream << file.rdbuf();
+	file.close();
+
+	file.open(fragmentPath);
+
+	if (!file.is_open())
+	{
+		LOG_ERROR("Cannot open fragment shader in path: %s", fragmentPath);
+		return;
+	}
+	
+	fstream << file.rdbuf();
+	file.close();
+
+	vsource = vstream.str();
+	fsource = fstream.str();
+
+	{	// vertex shader creation
+		m_vertexShader = glCreateShader(GL_VERTEX_SHADER);
+		if (m_vertexShader == 0)
+		{
+			LOG_ERROR("Cannot create Vertex Shader");
+			return;
+		}
+
+		const char *tempVsource = vsource.c_str();
+		glShaderSource(m_vertexShader, 1, &tempVsource, NULL);
+		glCompileShader(m_vertexShader);
+	}
+
+	{ // fragment shader creation
+		m_fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+		if (m_fragmentShader == 0)
+		{
+			LOG_ERROR("Cannot create Fragment Shader");
+			return;
+		}
+
+		const char* tempFsource = fsource.c_str();
+		glShaderSource(m_fragmentShader, 1, &tempFsource, NULL);
+		glCompileShader(m_vertexShader);
+	}
+
+	{ // Shader program creation
+		m_id = glCreateProgram();
+		if (m_id == 0)
+		{
+			LOG_ERROR("Cannot create Shader Program!");
+			return;
+		}
+		glAttachShader(m_id, m_vertexShader);
+		glAttachShader(m_id, m_fragmentShader);
+		glLinkProgram(m_id);
+	}
 }
 
 Shader::~Shader()
