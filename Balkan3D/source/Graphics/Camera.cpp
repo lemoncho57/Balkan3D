@@ -68,27 +68,27 @@ float Camera::getFov() const
 	return m_fov;
 }
 
-void Camera::move(int direction)
+void Camera::move(int direction, float speed)
 {
 	switch (direction)
 	{
 	case CAMERA_DIRECTION_FRONT:
-		m_pos += m_cameraFront * 1.5f * Clock::getDeltaTime(); // TODO: Multiply delta time once its implemented and slightly increase speed
+		m_pos += m_cameraFront * speed * Clock::getDeltaTime(); // TODO: Multiply delta time once its implemented and slightly increase speed
 		break;
 	case CAMERA_DIRECTION_BACK:
-		m_pos -= m_cameraFront * 1.5f * Clock::getDeltaTime();
+		m_pos -= m_cameraFront * speed * Clock::getDeltaTime();
 		break;
 	case CAMERA_DIRECTION_LEFT:
-		m_pos -= m_cameraRight * 1.5f * Clock::getDeltaTime();
+		m_pos -= m_cameraRight * speed * Clock::getDeltaTime();
 		break;
 	case CAMERA_DIRECTION_RIGHT:
-		m_pos += m_cameraRight * 1.5f * Clock::getDeltaTime();
+		m_pos += m_cameraRight * speed * Clock::getDeltaTime();
 		break;
 	case CAMERA_DIRECTION_UP:
-		m_pos += m_cameraUp * 1.5f * Clock::getDeltaTime();
+		m_pos += m_cameraUp * speed * Clock::getDeltaTime();
 		break;
 	case CAMERA_DIRECTION_DOWN:
-		m_pos -= m_cameraUp * 1.5f * Clock::getDeltaTime();
+		m_pos -= m_cameraUp * speed * Clock::getDeltaTime();
 		break;
 	default:
 		break;

@@ -36,7 +36,7 @@ public:
 	void setFov(float fov);
 	float getFov() const;
 
-	void move(int direction);
+	void move(int direction, float speed = 1.5f);
 
 private:
 	void update();

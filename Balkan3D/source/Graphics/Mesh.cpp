@@ -97,10 +97,10 @@ Mesh* Mesh::Plane(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, glm:
 
 	mesh->vertices =
 	{
-		{{-0.5f, 0.5f, 0.f}, color, {0.f, 1.f}, },
-		{{-0.5f,-0.5f,0.f},	color, {0.f, 0.f}, },
-		{{0.5f,-0.5f,0.f},	color, {1.f, 0.f}, },
-		{{0.5f,0.5f,0.f},	color, {1.f, 1.f}, }
+		{{-0.5f, 0.5f, 0.f}, color, {0.f, 1.f}, {0.f,0.f,1.f}},
+		{{-0.5f,-0.5f,0.f},	color, {0.f, 0.f}, {0.f,0.f,1.f}},
+		{{0.5f,-0.5f,0.f},	color, {1.f, 0.f}, {0.f,0.f,1.f}},
+		{{0.5f,0.5f,0.f},	color, {1.f, 1.f}, {0.f,0.f,1.f}}
 	};
 	mesh->indices = 
 	{

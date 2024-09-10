@@ -78,7 +78,7 @@ int main(void)
 	Texture texture2("Bira.png");
 
 	Light light;
-	light.pos = {-0.3f,0.f,-2.3f};
+	light.pos = {-2.78f,0.f,-2.3f};
 	light.color = {1.f,0.f,0.f};
 
 	events.setCurrentWindow(&window);
@@ -94,6 +94,7 @@ int main(void)
 		GraphicsUtils::clearColor(0.f, 0.f, 0.f, 1.f);
 
 		{
+			static float speed = 1.5f;
 			if (events.isKeyPressed(KeyCodes::KEY_KP_1))
 				shader.setvec3f("userColor", { 1.f,0.f,0.f });
 			else if (events.isKeyPressed(KeyCodes::KEY_KP_2))
@@ -106,18 +107,23 @@ int main(void)
 				shader.setvec3f("userColor", { 0.f,0.f,0.f });
 
 			if (events.isKeyPressed(KeyCodes::KEY_W))
-				camera.move(CAMERA_DIRECTION_FRONT);
+				camera.move(CAMERA_DIRECTION_FRONT, speed);
 			if (events.isKeyPressed(KeyCodes::KEY_S))
-				camera.move(CAMERA_DIRECTION_BACK);
+				camera.move(CAMERA_DIRECTION_BACK, speed);
 			if (events.isKeyPressed(KeyCodes::KEY_A))
-				camera.move(CAMERA_DIRECTION_LEFT);
+				camera.move(CAMERA_DIRECTION_LEFT, speed);
 			if (events.isKeyPressed(KeyCodes::KEY_D))
-				camera.move(CAMERA_DIRECTION_RIGHT);
+				camera.move(CAMERA_DIRECTION_RIGHT, speed);
 			if (events.isKeyPressed(KeyCodes::KEY_SPACE))
-				camera.move(CAMERA_DIRECTION_UP);
+				camera.move(CAMERA_DIRECTION_UP, speed);
 			if (events.isKeyPressed(KeyCodes::KEY_LEFT_CONTROL))
-				camera.move(CAMERA_DIRECTION_DOWN);
+				camera.move(CAMERA_DIRECTION_DOWN, speed);
+			if (events.isKeyPressed(KeyCodes::KEY_LEFT_SHIFT))
+				speed = 5.f;
 
+			else if(events.isKeyReleased(KeyCodes::KEY_LEFT_SHIFT))
+				speed = 1.5f;
+			
 			if (events.isKeyPressed(KeyCodes::KEY_RIGHT))
 				camera.setYaw(camera.getYaw() + 70.f * Clock::getDeltaTime());
 			if (events.isKeyPressed(KeyCodes::KEY_LEFT))
@@ -133,6 +139,12 @@ int main(void)
 				fps += 1.f;
 			else if (events.isKeyPressed(KeyCodes::KEY_KP_SUBTRACT))
 				fps -= 1.f;
+
+			if (events.isKeyPressed(KeyCodes::KEY_T))
+				camera.setPosition(light.pos);
+			else
+				camera.setPosition(camera.getPosition());
+
 			//if (events.isKeyPressed(KeyCodes::KEY_UP))
 			//	mesh.setPosition({ mesh.getPosition().x, mesh.getPosition().y + 0.03f, mesh.getPosition().z }); // Needs to be multiplied by delta
 			//else
@@ -155,6 +167,10 @@ int main(void)
 		mesh.draw();
 		shader.setmat4fv("modelMatrix", mesh2.getModelMatrix(), GL_FALSE);
 		mesh2.draw();
+
+		LOG_INFO("Camera position x: %f", camera.getPosition().x);
+		LOG_INFO("Camera position y: %f", camera.getPosition().y);
+		LOG_INFO("Camera position z: %f", camera.getPosition().z);
 
 		if (events.isKeyPressed(KeyCodes::KEY_ESCAPE))
 			window.close();
