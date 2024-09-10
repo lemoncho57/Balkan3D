@@ -8,6 +8,7 @@
 #include <Balkan3D/include/Graphics/Texture.h>
 #include <Balkan3D/include/Graphics/Camera.h>
 #include <Balkan3D/include/Time/Clock.h>
+#include <Balkan3D/include/Graphics/Light.h>
 #include <string>
 
 // Code is just for testing
@@ -76,6 +77,10 @@ int main(void)
 	Texture texture("Ne_e_shoferska.png");
 	Texture texture2("Bira.png");
 
+	Light light;
+	light.pos = {-0.3f,0.f,-2.3f};
+	light.color = {1.f,0.f,0.f};
+
 	events.setCurrentWindow(&window);
 	shader.use();
 	shader.setvec3f("userColor", { 1.f,1.f,1.f });
@@ -86,7 +91,7 @@ int main(void)
 	while(!window.shouldClose())
 	{
 		window.beginDrawing(fps);
-		GraphicsUtils::clearColor(1.f, 1.f, 0.f, 1.f);
+		GraphicsUtils::clearColor(0.f, 0.f, 0.f, 1.f);
 
 		{
 			if (events.isKeyPressed(KeyCodes::KEY_KP_1))
@@ -139,7 +144,9 @@ int main(void)
 		shader.set1i("tex2", 1);
 		shader.setmat4fv("camMatrix", camera.getViewMatrix(), GL_FALSE);
 		shader.setmat4fv("projMatrix", camera.getProjectionMatrix(), GL_FALSE);
-		
+		shader.setvec3f("lightPos", light.pos);
+		shader.setvec3f("lightColor", light.color);
+
 		texture.activateTexture(GL_TEXTURE0);
 		texture.use();
 		texture2.activateTexture(GL_TEXTURE1);

@@ -44,7 +44,11 @@ Mesh::~Mesh()
 void Mesh::draw()
 {
 	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	if (!indices.empty())
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	else
+		glDrawArrays(GL_TRIANGLES, vertices.data()->position[0], vertices.size());
+	
 }
 
 void Mesh::submit()
@@ -57,7 +61,6 @@ void Mesh::submit()
 	else
 		glBufferData(GL_ARRAY_BUFFER, 0, NULL, GL_STATIC_DRAW);
 	
-
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	if (indices.size() > 0)
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
@@ -94,10 +97,10 @@ Mesh* Mesh::Plane(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, glm:
 
 	mesh->vertices =
 	{
-		{{-0.5f, 0.5f, 0.f}, color, {0.f, 1.f}},
-		{{-0.5f,-0.5f,0.f},	color, {0.f, 0.f}},
-		{{0.5f,-0.5f,0.f},	color, {1.f, 0.f}},
-		{{0.5f,0.5f,0.f},	color, {1.f, 1.f}}
+		{{-0.5f, 0.5f, 0.f}, color, {0.f, 1.f}, },
+		{{-0.5f,-0.5f,0.f},	color, {0.f, 0.f}, },
+		{{0.5f,-0.5f,0.f},	color, {1.f, 0.f}, },
+		{{0.5f,0.5f,0.f},	color, {1.f, 1.f}, }
 	};
 	mesh->indices = 
 	{
@@ -114,38 +117,98 @@ Mesh* Mesh::Cube(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, glm::
 {
 	Mesh* mesh = new Mesh(transform, rotation, scale);
 
-	mesh->vertices =
-	{
-		{{-0.5f, 0.5f, 0.5f}, color, {0.f, 1.f}},	//0 Front up left
-		{{-0.5f,-0.5f,0.5f}, color, {0.f, 0.f}},	//1 Front down left
-		{{0.5f,-0.5f,0.5f},	color, {1.f, 0.f}},		//2 Front down right
-		{{0.5f,0.5f,0.5f},	color, {1.f, 1.f}},		//3 Front up right
+	// mesh->vertices =
+	// {
+	// 	{{-0.5f, 0.5f, 0.5f}, color, {0.f, 1.f}, {0.f, 0.f, 1.f}},	//0 Front up left
+	// 	{{-0.5f,-0.5f,0.5f}, color, {0.f, 0.f}, {0.f, 0.f, 1.f}},	//1 Front down left
+	// 	{{0.5f,-0.5f,0.5f},	color, {1.f, 0.f},	{0.f, 0.f, 1.f}},	//2 Front down right
+	// 	{{0.5f,0.5f,0.5f},	color, {1.f, 1.f},	{0.f, 0.f, 1.f}},	//3 Front up right
 
-		{{-0.5f, 0.5f, -0.5f}, color, {0.f, 1.f}},	//4 Back up left
-		{{-0.5f, -0.5f, -0.5f}, color, {0.f, 0.f}},	//5 Back down left
-		{{0.5, -0.5f, -0.5f}, color, {1.f, 0.f}},	//6 Back down right
-		{{0.5f,0.5f,-0.5f},	color, {1.f, 1.f}},		//7 Back up right
+	// 	{{-0.5f, 0.5f, -0.5f}, color, {0.f, 1.f},{0.f, 0.f, -1.f}},	 //4 Back up left
+	// 	{{-0.5f, -0.5f, -0.5f}, color, {0.f, 0.f},	{0.f, 0.f, -1.f}},//5 Back down left
+	// 	{{0.5, -0.5f, -0.5f}, color, {1.f, 0.f}, {0.f, 0.f, -1.f}},	 //6 Back down right
+	// 	{{0.5f,0.5f,-0.5f},	color, {1.f, 1.f},	{0.f, 0.f, -1.f}}	 //7 Back up right
+	// };
+
+	// mesh->indices =
+	// {
+	// 	0,1,2, // Front
+	// 	0,2,3,
+
+	// 	0,1,5, // Left
+	// 	0,5,4,
+
+	// 	4,5,6, // Back
+	// 	4,6,7,
+
+	// 	3,2,6, // Right
+	// 	3,6,7,
+
+	// 	0,3,4, // Up
+	// 	4,3,7,
+
+	// 	1,2,5,
+	// 	5,2,6
+	// };
+
+	mesh->vertices = 
+	{
+		{{-1.0f, -1.0f,  1.0f}, color,  {0.f,0.f},{0.0f, 0.0f, 1.0f}},  // Bottom-left
+     	{{1.0f, -1.0f,  1.0f},  color , {1.f,0.f},{0.0f, 0.0f, 1.0f}},  // Bottom-right
+     	{{1.0f,  1.0f,  1.0f},  color , {1.f,1.f},{0.0f, 0.0f, 1.0f}},  // Top-right
+    	{{-1.0f,  1.0f,  1.0f}, color , {0.f,1.f}, {0.0f, 0.0f, 1.0f}},  // Top-left}
+		
+    	{{-1.0f, -1.0f, -1.0f}, color ,{0.0f, 0.0f},  {0.0f,  0.0f, -1.0f}},  // Back-bottom-left
+    	{{ 1.0f, -1.0f, -1.0f}, color ,{1.0f, 0.0f},  {0.0f,  0.0f, -1.0f}},  // Back-bottom-right
+    	{{ 1.0f,  1.0f, -1.0f}, color ,{1.0f, 1.0f},  {0.0f,  0.0f, -1.0f}},  // Back-top-right
+    	{{-1.0f,  1.0f, -1.0f}, color ,{0.0f, 1.0f},  {0.0f,  0.0f, -1.0f}},  // Back-top-left
+		
+		{{-1.0f,  1.0f,  1.0f}, color, {0.0f, 0.0f},  {0.0f,  1.0f,  0.0f}},  // Top-bottom-left
+     	{{1.0f,  1.0f,  1.0f},  color, {1.0f, 0.0f},  {0.0f,  1.0f,  0.0f}},  // Top-bottom-right
+     	{{1.0f,  1.0f, -1.0f},  color, {1.0f, 1.0f},  {0.0f,  1.0f,  0.0f}},  // Top-top-right
+    	{{-1.0f,  1.0f, -1.0f},  color, {0.0f, 1.0f},  {0.0f,  1.0f,  0.0f}},  // Top-top-left
+	
+		{{-1.0f, -1.0f,  1.0f},  color, {0.0f, 0.0f},  {0.0f, -1.0f,  0.0f}},  // Bottom-bottom-left
+    	{{ 1.0f, -1.0f,  1.0f},  color, {1.0f, 0.0f},  {0.0f, -1.0f,  0.0f}},  // Bottom-bottom-right
+    	{{ 1.0f, -1.0f, -1.0f},  color, {1.0f, 1.0f},  {0.0f, -1.0f,  0.0f}},  // Bottom-top-right
+    	{{-1.0f, -1.0f, -1.0f},  color, {0.0f, 1.0f},  {0.0f, -1.0f,  0.0f}},  // Bottom-top-left
+
+		{{1.0f, -1.0f,  1.0f}, color ,{0.0f, 0.0f},  {1.0f,  0.0f,  0.0f}},  // Right-bottom-left
+     	{{1.0f,  1.0f,  1.0f}, color ,{1.0f, 0.0f},  {1.0f,  0.0f,  0.0f}},  // Right-bottom-right
+     	{{1.0f,  1.0f, -1.0f}, color ,{1.0f, 1.0f},  {1.0f,  0.0f,  0.0f}},  // Right-top-right
+     	{{1.0f, -1.0f, -1.0f}, color ,{0.0f, 1.0f},  {1.0f,  0.0f,  0.0f}},  // Right-top-left
+
+		{{-1.0f, -1.0f,  1.0f}, color, {0.0f, 0.0f}, {-1.0f,  0.0f,  0.0f}},  // Left-bottom-left
+    	{{-1.0f,  1.0f,  1.0f}, color, {1.0f, 0.0f}, {-1.0f,  0.0f,  0.0f}},  // Left-bottom-right
+    	{{-1.0f,  1.0f, -1.0f}, color, {1.0f, 1.0f}, {-1.0f,  0.0f,  0.0f}},  // Left-top-right
+    	{{-1.0f, -1.0f, -1.0f}, color, {0.0f, 1.0f}, {-1.0f,  0.0f,  0.0f}}   // Left-top-left
 	};
 
 	mesh->indices =
 	{
-		0,1,2, // Front
-		0,2,3,
+		// Front face
+    	0, 1, 2,
+		2, 3, 0,
 
-		0,1,5, // Left
-		0,5,4,
+    	// Back face
+    	4, 5, 6,
+		6, 7, 4,
 
-		4,5,6, // Back
-		4,6,7,
+    	// Top face
+    	8, 9, 10,
+		10, 11, 8,
 
-		3,2,6, // Right
-		3,6,7,
+    	// Bottom face
+    	12, 13, 14,
+		14, 15, 12,
 
-		0,3,4, // Up
-		4,3,7,
+    	// Right face
+    	16, 17, 18,
+		18, 19, 16,
 
-		1,2,5,
-		5,2,6
+    	// Left face
+    	20, 21, 22,
+		22, 23, 20
 	};
 
 	mesh->submit();
