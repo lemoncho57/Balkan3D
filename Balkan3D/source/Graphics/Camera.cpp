@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Graphics/Camera.h"
+#include "Time/Clock.h"
 
 Camera::Camera(glm::vec3 position, float fov, float aspect, float near, float far)
 	: m_viewMatrix(1.f), m_projMatrix(1.f), m_pos(position), m_cameraFront(0.f, 0.f, -1.f), m_fov(fov),

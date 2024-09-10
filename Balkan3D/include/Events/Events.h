@@ -1,6 +1,8 @@
 #ifndef EVENTS_EVENTS_H
 #define EVENTS_EVENTS_H
-#include "Core.h"
+#include "../Defines.h"
+#include "KeyCodes.h"
+#include "../Window.h"
 
 extern "C" class BALKAN3D_API Events
 {

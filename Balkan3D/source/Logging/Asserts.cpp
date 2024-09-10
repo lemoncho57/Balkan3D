@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Logging/Asserts.h"
+#include "Logging/Loging.h"
 
 void reportAssert(const char* expression, const char* message, const char* file, long line)
 {

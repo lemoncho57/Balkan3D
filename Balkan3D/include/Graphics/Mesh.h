@@ -1,6 +1,6 @@
 #ifndef GRAPHICS_MESH_H
 #define GRAPHICS_MESH_H
-#include "Core.h"
+#include "../Defines.h"
 #include <glm/glm.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Graphics/Shader.h"
+#include "Logging/Loging.h"
 
 Shader::Shader(std::string vertex, std::string fragment)
 {

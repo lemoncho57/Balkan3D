@@ -1,7 +1,7 @@
 #ifndef GRAPHICS_TEXTURE_H
 #define GRAPHICS_TEXTURE_H
 #include <stb_image/stb_image.h>
-#include "Core.h"
+#include "../Defines.h"
 
 extern "C" class BALKAN3D_API Texture
 {

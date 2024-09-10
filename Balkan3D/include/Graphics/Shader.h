@@ -1,6 +1,6 @@
 #ifndef GRAPHICS_SHADER_H
 #define GRAPHICS_SHADER_H
-#include "Core.h"
+#include "../Defines.h"
 #include "glad/glad.h"
 #include <string>
 #include <glm/glm.hpp>

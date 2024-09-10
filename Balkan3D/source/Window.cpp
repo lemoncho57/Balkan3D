@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Window.h"
+#include "Logging/Asserts.h"
+#include "Logging/Loging.h"
 
 Window::Window(const char* title, int width, int height)
 	: m_title((char*)title), m_width(width), m_height(height)

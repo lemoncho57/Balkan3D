@@ -12,15 +12,7 @@
 #include <glm/mat3x3.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "Core.h"
-#include "Window.h"
-#include "Logging/Loging.h"
-#include "Logging/Asserts.h"
-#include "Events/KeyCodes.h"
-#include "Events/Events.h"
-#include "Graphics/GraphicsUtils.h"
-#include "Graphics/Shader.h"
-#include "Graphics/Mesh.h"
+#include "Defines.h"
 #include <iostream>
 #include <stdio.h>
 #include <cstdarg>

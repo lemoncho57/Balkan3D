@@ -1,5 +1,5 @@
 #pragma once
-#include "Core.h"
+#include "../Defines.h"
 
 extern "C" class BALKAN3D_API Clock
 {

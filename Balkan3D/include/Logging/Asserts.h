@@ -1,7 +1,7 @@
 #ifndef LOGGING_ASSERTS_H
 #define LOGGING_ASSERTS_H
 
-#include "Core.h"
+#include "../Defines.h"
 
 #define ASSERTIONS_ENABLE
 
