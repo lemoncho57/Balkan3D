@@ -20,6 +20,7 @@ extern "C" class BALKAN3D_API Mesh
 {
 public:
 	Mesh(glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f));
+	Mesh(const char* path, glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f));
 	~Mesh();
 
 	//void use(); // This is already done in draw
@@ -42,7 +43,7 @@ public:
 
 private:
 	void update();
-
+	
 public:
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;

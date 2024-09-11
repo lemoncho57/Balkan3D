@@ -19,6 +19,6 @@ void main()
 	gl_Position = projMatrix * camMatrix * modelMatrix * vec4(aPos, 1.0);
 	color = aColor;
 	texCoords = aTexCoords;
-	normal = aNormal;
+	normal = mat3(transpose(inverse(modelMatrix))) * aNormal;
 	fragPos = vec3(modelMatrix * vec4(aPos, 1.0));
 }

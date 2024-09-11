@@ -1,5 +1,9 @@
 #include "pch.h"
 #include "Graphics/Mesh.h"
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include "Logging/Loging.h"
 
 Mesh::Mesh(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
 {
@@ -17,21 +21,79 @@ Mesh::Mesh(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
 	submit();
 }
 
-//Mesh::Mesh(glm::vec3 transform /*= glm::vec3(0.f, 0.f, 0.f)*/, glm::vec3 rotation /*= glm::vec3(0.f, 0.f, 0.f)*/, glm::vec3 scale /*= glm::vec3(1.f, 1.f, 1.f)*/)
-//{
-//	glGenVertexArrays(1, &VAO);
-//	glGenBuffers(1, &VBO);
-//	glGenBuffers(1, &EBO);
-//
-//	m_modelMatrix = glm::mat4(1.f);
-//
-//	m_transform = transform;
-//	m_rotation = rotation;
-//	m_scale = scale;
-//
-//	update();
-//	submit();
-//}
+void processMesh(aiMesh* mesh, const aiScene* scene, std::vector<Vertex>* vertices, std::vector<GLuint>* indices)
+{
+	for (size_t i = 0; i < mesh->mNumVertices; ++i)
+	{
+		aiVector3D pos = mesh->mVertices[i];
+		Vertex v = {
+			.position = {pos.x, pos.y, pos.z},
+			.color = {1.f,1.f,1.f,1.f}
+		};
+
+		if (mesh->HasNormals())
+		{
+			aiVector3D normals = mesh->mNormals[i];
+			v.normal = {normals.x, normals.y, normals.z};		
+		}
+		
+		if (mesh->mTextureCoords[0])
+		{
+			aiVector3D texCoords = mesh->mTextureCoords[0][i];
+			v.texCoords = {texCoords.x, texCoords.y};
+		}
+		
+		vertices->push_back(v);
+	}
+	
+	for (size_t i = 0; i < mesh->mNumFaces; ++i)
+	{
+		aiFace face = mesh->mFaces[i];
+		for (size_t j = 0; j < face.mNumIndices; ++j)
+			indices->push_back((GLuint) face.mIndices[j]);
+		
+	}
+}
+
+void processNode(aiNode* node, const aiScene* scene, std::vector<Vertex>* vertices, std::vector<GLuint>* indices)
+{
+	for (size_t i = 0; i < node->mNumMeshes; ++i)
+	{
+		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+		processMesh(mesh, scene, vertices, indices);
+	}	
+	
+	for (size_t i = 0; i < node->mNumChildren; ++i)
+		processNode(node->mChildren[i], scene, vertices, indices);	
+}
+
+Mesh::Mesh(const char* path, glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
+{
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	m_modelMatrix = glm::mat4(1.f);
+
+	m_transform = transform;
+	m_rotation = rotation;
+	m_scale = scale;
+
+	Assimp::Importer importer;
+
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
+
+	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+	{
+		LOG_ERROR("Unable to open model, error message: %s", importer.GetErrorString());
+		return;
+	}
+	
+	processNode(scene->mRootNode, scene, &this->vertices, &this->indices);
+
+	update();	
+	submit();
+}
 
 Mesh::~Mesh()
 {
@@ -49,6 +111,7 @@ void Mesh::draw()
 	else
 		glDrawArrays(GL_TRIANGLES, vertices.data()->position[0], vertices.size());
 	
+	glBindVertexArray(0);
 }
 
 void Mesh::submit()

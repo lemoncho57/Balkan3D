@@ -57,22 +57,9 @@ int main(void)
 
 	Camera camera(glm::vec3(0.f, 0.f, 3.f), 50.f,(float) window.getWidth() / (float) window.getHeight());
 
-	Mesh& mesh = *Mesh::Cube(); // the textures are not correct
-	//mesh.setPosition({ 0.f, 1.f,0.f });
-	//mesh.vertices = 
-	//{
-	//	{{-0.5f, 0.5f, 0.f}, {0.f,0.f,1.f, 1.f}, {0.f, 1.f}},
-	//	{{-0.5f,-0.5f,0.f},	{0.f,0.f,1.f, 1.f}, {0.f, 0.f}},
-	//	{{0.5f,-0.5f,0.f},	{0.f,0.f,1.f, 1.f}, {1.f, 0.f}},
-	//	{{0.5f,0.5f,0.f},	{0.f,0.f,1.f, 1.f}, {1.f, 1.f}}
-	//};
+	Mesh bmw("bmwe34/source/BMW M5 E34.obj");
+	Mesh& mesh = *Mesh::Cube();
 	Mesh& mesh2 = *Mesh::Plane();
-
-	//mesh.indices =
-	//{
-	//	0,1,2,
-	//	0,2,3
-	//};
 
 	Texture texture("Ne_e_shoferska.png");
 	Texture texture2("Bira.png");
@@ -81,18 +68,13 @@ int main(void)
 	light.pos = {-2.78f,0.f,-2.3f};
 	light.color = {1.f,0.f,0.f};
 
-	LOG_FATAL("TEST");
-	LOG_ERROR("TEST");
-	LOG_WARNING("TEST");
-	LOG_INFO("TEST");
-	LOG_DEBUG("TEST");
-
-
 	events.setCurrentWindow(&window);
 	shader.use();
 	shader.setvec3f("userColor", { 1.f,1.f,1.f });
 	shader.unuse();
 	mesh2.setPosition({0,0,-3});
+	bmw.setPosition({0.f, 0.f, -2.f});
+
 
 	int fps = 165.f;
 	while(!window.shouldClose())
@@ -165,6 +147,10 @@ int main(void)
 		shader.setmat4fv("projMatrix", camera.getProjectionMatrix(), GL_FALSE);
 		shader.setvec3f("lightPos", light.pos);
 		shader.setvec3f("lightColor", light.color);
+		shader.setvec3f("camPos", camera.getPosition());
+
+		shader.setmat4fv("modelMatrix", bmw.getModelMatrix(), GL_FALSE);
+		bmw.draw();
 
 		texture.activateTexture(GL_TEXTURE0);
 		texture.use();
@@ -174,11 +160,7 @@ int main(void)
 		mesh.draw();
 		shader.setmat4fv("modelMatrix", mesh2.getModelMatrix(), GL_FALSE);
 		mesh2.draw();
-
-		//LOG_INFO("Camera position x: %f", camera.getPosition().x);
-		//LOG_INFO("Camera position y: %f", camera.getPosition().y);
-		//LOG_INFO("Camera position z: %f", camera.getPosition().z);
-
+		
 		if (events.isKeyPressed(KeyCodes::KEY_ESCAPE))
 			window.close();
 

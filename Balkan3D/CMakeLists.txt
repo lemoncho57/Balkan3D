@@ -14,6 +14,8 @@ if(WIN32)
 target_link_libraries(Balkan3DEngine PUBLIC ${CMAKE_SOURCE_DIR}/vendors/lib/GLFW/glfw3.lib)
 else()
 target_link_libraries(Balkan3DEngine PUBLIC /usr/lib64/libglfw.so.3)
+target_link_libraries(Balkan3DEngine PUBLIC /usr/lib64/libassimp.so)
+target_include_directories(Balkan3DEngine PUBLIC /usr/include/assimp)
 endif(WIN32)
 
 
