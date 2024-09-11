@@ -81,6 +81,13 @@ int main(void)
 	light.pos = {-2.78f,0.f,-2.3f};
 	light.color = {1.f,0.f,0.f};
 
+	LOG_FATAL("TEST");
+	LOG_ERROR("TEST");
+	LOG_WARNING("TEST");
+	LOG_INFO("TEST");
+	LOG_DEBUG("TEST");
+
+
 	events.setCurrentWindow(&window);
 	shader.use();
 	shader.setvec3f("userColor", { 1.f,1.f,1.f });
@@ -168,9 +175,9 @@ int main(void)
 		shader.setmat4fv("modelMatrix", mesh2.getModelMatrix(), GL_FALSE);
 		mesh2.draw();
 
-		LOG_INFO("Camera position x: %f", camera.getPosition().x);
-		LOG_INFO("Camera position y: %f", camera.getPosition().y);
-		LOG_INFO("Camera position z: %f", camera.getPosition().z);
+		//LOG_INFO("Camera position x: %f", camera.getPosition().x);
+		//LOG_INFO("Camera position y: %f", camera.getPosition().y);
+		//LOG_INFO("Camera position z: %f", camera.getPosition().z);
 
 		if (events.isKeyPressed(KeyCodes::KEY_ESCAPE))
 			window.close();
