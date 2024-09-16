@@ -11,6 +11,8 @@
 #include <Balkan3D/include/Graphics/Light.h>
 #include <string>
 
+
+
 // Code is just for testing
 int main(void)
 {
@@ -55,9 +57,9 @@ int main(void)
 
 	Shader shader((const char*)"vertex.glsl", (const char*)"fragment.glsl");
 
-	Camera camera(glm::vec3(0.f, 0.f, 3.f), 50.f,(float) window.getWidth() / (float) window.getHeight());
+	Camera camera(glm::vec3(0.f, 0.f, 3.f), 50.f, (float) window.getWidth() / (float) window.getHeight());
 
-	Mesh bmw("bmwe34/source/BMW M5 E34.obj");
+	Mesh bmw("bmw/source/BMW M5 E34.obj", 0);
 	Mesh& mesh = *Mesh::Cube();
 	Mesh& mesh2 = *Mesh::Plane();
 
@@ -66,7 +68,7 @@ int main(void)
 
 	Light light;
 	light.pos = {-2.78f,0.f,-2.3f};
-	light.color = {1.f,0.f,0.f};
+	light.color = {1.f,1.f,1.f};
 
 	events.setCurrentWindow(&window);
 	shader.use();
@@ -74,7 +76,6 @@ int main(void)
 	shader.unuse();
 	mesh2.setPosition({0,0,-3});
 	bmw.setPosition({0.f, 0.f, -2.f});
-
 
 	int fps = 165.f;
 	while(!window.shouldClose())
@@ -143,22 +144,22 @@ int main(void)
 		shader.use();
 		shader.set1i("tex", 0);
 		shader.set1i("tex2", 1);
-		shader.setmat4fv("camMatrix", camera.getViewMatrix(), GL_FALSE);
-		shader.setmat4fv("projMatrix", camera.getProjectionMatrix(), GL_FALSE);
+		shader.setmat4fv("camMatrix", camera.getViewMatrix(), 0);
+		shader.setmat4fv("projMatrix", camera.getProjectionMatrix(), 0);
 		shader.setvec3f("lightPos", light.pos);
 		shader.setvec3f("lightColor", light.color);
 		shader.setvec3f("camPos", camera.getPosition());
 
-		shader.setmat4fv("modelMatrix", bmw.getModelMatrix(), GL_FALSE);
+		shader.setmat4fv("modelMatrix", bmw.getModelMatrix(), 0);
 		bmw.draw();
 
-		texture.activateTexture(GL_TEXTURE0);
+		texture.activateTexture(0x84C0);
 		texture.use();
-		texture2.activateTexture(GL_TEXTURE1);
+		texture2.activateTexture(0x84C1);
 		texture2.use();
-		shader.setmat4fv("modelMatrix", mesh.getModelMatrix(), GL_FALSE);
+		shader.setmat4fv("modelMatrix", mesh.getModelMatrix(), 0);
 		mesh.draw();
-		shader.setmat4fv("modelMatrix", mesh2.getModelMatrix(), GL_FALSE);
+		shader.setmat4fv("modelMatrix", mesh2.getModelMatrix(), 0);
 		mesh2.draw();
 		
 		if (events.isKeyPressed(KeyCodes::KEY_ESCAPE))

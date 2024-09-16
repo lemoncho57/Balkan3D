@@ -1,12 +1,14 @@
 #ifndef GRAPHICS_MESH_H
 #define GRAPHICS_MESH_H
+
 #include "../Defines.h"
 #include <glm/glm.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <glad/glad.h>
 #include <vector>
+
+typedef unsigned int GLuint;
 
 extern "C" struct BALKAN3D_API Vertex
 {
@@ -20,7 +22,7 @@ extern "C" class BALKAN3D_API Mesh
 {
 public:
 	Mesh(glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f));
-	Mesh(const char* path, glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f));
+	Mesh(const char* path, const char* directory,glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f));
 	~Mesh();
 
 	//void use(); // This is already done in draw

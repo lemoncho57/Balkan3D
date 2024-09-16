@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(Balkan3DEngine)
 
-file(GLOB_RECURSE HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
+file(GLOB_RECURSE HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h ${CMAKE_SOURCE_DIR}/vendors/include/glad/glad.h)
 file(GLOB_RECURSE SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 
 add_library(Balkan3DEngine SHARED ${SOURCES} ${CMAKE_SOURCE_DIR}/vendors/include/glad/glad.c ${CMAKE_SOURCE_DIR}/vendors/include/stb_image/stb_image.cpp ${HEADERS})
@@ -14,8 +14,6 @@ if(WIN32)
 target_link_libraries(Balkan3DEngine PUBLIC ${CMAKE_SOURCE_DIR}/vendors/lib/GLFW/glfw3.lib)
 else()
 target_link_libraries(Balkan3DEngine PUBLIC /usr/lib64/libglfw.so.3)
-target_link_libraries(Balkan3DEngine PUBLIC /usr/lib64/libassimp.so)
-target_include_directories(Balkan3DEngine PUBLIC /usr/include/assimp)
 endif(WIN32)
 
 

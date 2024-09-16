@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Graphics/Texture.h"
 #include "Logging/Loging.h"
+#include <glad/glad.h>
+#include <stb_image/stb_image.h>
 
 Texture::Texture(const char* fileName, bool flipImage)
 {

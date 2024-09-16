@@ -1,8 +1,9 @@
 #ifndef GRAPHICS_TEXTURE_H
 #define GRAPHICS_TEXTURE_H
-#include <stb_image/stb_image.h>
 #include "../Defines.h"
 
+typedef unsigned int GLenum;
+typedef unsigned int GLuint;
 extern "C" class BALKAN3D_API Texture
 {
 public:

@@ -6,7 +6,7 @@
 #define ASSERTIONS_ENABLE
 
 #ifdef ASSERTIONS_ENABLE
-#ifdef _MSV_VER
+#ifdef _MSC_VER
 #define debugBreak() __debugbreak()
 #else
 #define debugBreak() __builtin_trap()

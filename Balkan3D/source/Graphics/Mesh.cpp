@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "Graphics/Mesh.h"
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+#include <glad/glad.h>
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <tinyObjLoader/tiny_obj_loader.h>
 #include "Logging/Loging.h"
 
 Mesh::Mesh(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
@@ -21,53 +21,7 @@ Mesh::Mesh(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
 	submit();
 }
 
-void processMesh(aiMesh* mesh, const aiScene* scene, std::vector<Vertex>* vertices, std::vector<GLuint>* indices)
-{
-	for (size_t i = 0; i < mesh->mNumVertices; ++i)
-	{
-		aiVector3D pos = mesh->mVertices[i];
-		Vertex v = {
-			.position = {pos.x, pos.y, pos.z},
-			.color = {1.f,1.f,1.f,1.f}
-		};
-
-		if (mesh->HasNormals())
-		{
-			aiVector3D normals = mesh->mNormals[i];
-			v.normal = {normals.x, normals.y, normals.z};		
-		}
-		
-		if (mesh->mTextureCoords[0])
-		{
-			aiVector3D texCoords = mesh->mTextureCoords[0][i];
-			v.texCoords = {texCoords.x, texCoords.y};
-		}
-		
-		vertices->push_back(v);
-	}
-	
-	for (size_t i = 0; i < mesh->mNumFaces; ++i)
-	{
-		aiFace face = mesh->mFaces[i];
-		for (size_t j = 0; j < face.mNumIndices; ++j)
-			indices->push_back((GLuint) face.mIndices[j]);
-		
-	}
-}
-
-void processNode(aiNode* node, const aiScene* scene, std::vector<Vertex>* vertices, std::vector<GLuint>* indices)
-{
-	for (size_t i = 0; i < node->mNumMeshes; ++i)
-	{
-		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		processMesh(mesh, scene, vertices, indices);
-	}	
-	
-	for (size_t i = 0; i < node->mNumChildren; ++i)
-		processNode(node->mChildren[i], scene, vertices, indices);	
-}
-
-Mesh::Mesh(const char* path, glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
+Mesh::Mesh(const char* path, const char* directory, glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
 {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -79,17 +33,50 @@ Mesh::Mesh(const char* path, glm::vec3 transform, glm::vec3 rotation, glm::vec3 
 	m_rotation = rotation;
 	m_scale = scale;
 
-	Assimp::Importer importer;
-
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
-
-	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+	//Model loading
 	{
-		LOG_ERROR("Unable to open model, error message: %s", importer.GetErrorString());
-		return;
+		tinyobj::attrib_t attr;
+		std::vector<tinyobj::shape_t> shapes;
+		std::vector<tinyobj::material_t> materials;
+		std::string err;
+
+		bool loaded = tinyobj::LoadObj(&attr, &shapes, &materials, &err, path, directory, true);
+
+		if(!loaded)
+		{
+			LOG_ERROR("Unable to load model!\n");
+			LOG_DEBUG("Error message: %s", err.c_str());
+			return;
+		}
+
+		for (const auto& shape : shapes)
+		{
+			for (const auto& index : shape.mesh.indices)
+			{
+				Vertex v;
+				v.position.x = attr.vertices[3 * index.vertex_index + 0];
+				v.position.y = attr.vertices[3 * index.vertex_index + 1];
+				v.position.z = attr.vertices[3 * index.vertex_index + 2];
+
+				v.color = {1.f,1.f,1.f,1.f};
+
+				if (index.normal_index >= 0)
+				{
+					v.normal.x = attr.normals[3 * index.normal_index + 0];
+					v.normal.y = attr.normals[3 * index.normal_index + 1];
+					v.normal.z = attr.normals[3 * index.normal_index + 2];
+				}
+
+				if (index.texcoord_index >= 0)
+				{
+					v.texCoords.x = attr.texcoords[2 * index.texcoord_index + 0];
+					v.texCoords.y = attr.texcoords[2 * index.texcoord_index + 1];
+				}
+				vertices.push_back(v);
+				indices.push_back(index.vertex_index);
+			}
+		}
 	}
-	
-	processNode(scene->mRootNode, scene, &this->vertices, &this->indices);
 
 	update();	
 	submit();
