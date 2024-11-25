@@ -16,6 +16,10 @@
 # Mono auto generated files
 mono_crash.*
 
+# TODO: In the future remove these because they are just for testing
+bmw/
+bmwe34/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

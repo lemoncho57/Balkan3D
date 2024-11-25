@@ -20,6 +20,7 @@ Window::Window(const char* title, int width, int height)
 	BALKAN3D_ASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Unable to initialize glad");
 
 	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
 	Clock::init();
 }
 

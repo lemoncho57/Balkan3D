@@ -59,7 +59,13 @@ int main(void)
 
 	Camera camera(glm::vec3(0.f, 0.f, 3.f), 50.f, (float) window.getWidth() / (float) window.getHeight());
 
+<<<<<<< HEAD
 	Mesh bmw("bmw/source/BMW M5 E34.obj", 0);
+=======
+	//Mesh bmw("bmwe34/source/BMW M5 E34.obj");
+	//Mesh bmw("bmw/source/sketchfab e34.fbx");
+	Mesh bmw("bmwe34/source/BMW M5 E34.obj");
+>>>>>>> be38ebe (Fix (Linux Test): The model loader now works (.obj ONLY))
 	Mesh& mesh = *Mesh::Cube();
 	Mesh& mesh2 = *Mesh::Plane();
 
@@ -134,6 +140,16 @@ int main(void)
 				camera.setPosition(light.pos);
 			else
 				camera.setPosition(camera.getPosition());
+
+			static bool wireframe = false;
+			if (events.isKeyPressed(KeyCodes::KEY_L))
+				wireframe = true;
+			else
+				wireframe = false;
+			if(wireframe)
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			else
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 			//if (events.isKeyPressed(KeyCodes::KEY_UP))
 			//	mesh.setPosition({ mesh.getPosition().x, mesh.getPosition().y + 0.03f, mesh.getPosition().z }); // Needs to be multiplied by delta
