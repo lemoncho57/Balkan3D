@@ -1,9 +1,11 @@
 #include "pch.h"
 #include "Graphics/Mesh.h"
-#include <glad/glad.h>
-#define TINYOBJLOADER_IMPLEMENTATION
-#include <tinyObjLoader/tiny_obj_loader.h>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 #include "Logging/Loging.h"
+#include <fstream>
+#include <sstream>
 
 Mesh::Mesh(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
 {
@@ -21,7 +23,51 @@ Mesh::Mesh(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
 	submit();
 }
 
-Mesh::Mesh(const char* path, const char* directory, glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
+// void processMesh(aiMesh *mesh, std::vector<Vertex>& vertices, std::vector<GLuint>& indices)
+// {
+// 	for (size_t i = 0; i < mesh->mNumVertices; ++i)
+// 	{
+// 		Vertex v;
+// 		aiVector3D pos = mesh->mVertices[i];
+// 		v.position = glm::vec3{pos.x, pos.y, pos.z};
+// 		v.color = glm::vec4{1.f, 1.f, 1.f, 1.f};
+
+// 		if (mesh->HasNormals())
+// 		{
+// 			aiVector3D normals = mesh->mNormals[i];
+// 			v.normal = glm::vec3{normals.x, normals.y, normals.z};
+// 		}
+
+// 		if (mesh->mTextureCoords[0])
+// 		{
+// 			aiVector3D texCoords = mesh->mTextureCoords[0][i];
+// 			v.texCoords = glm::vec2{texCoords.x, texCoords.y};
+// 		}
+
+// 		vertices.push_back(v);
+// 	}
+
+// 	for (size_t i = 0; i < mesh->mNumFaces; ++i)
+// 	{
+// 		aiFace face = mesh->mFaces[i];
+// 		for (size_t j = 0; j < face.mNumIndices; ++j)
+// 			indices.push_back((GLuint)face.mIndices[j]);
+// 	}
+// }
+
+// void processNode(aiNode *node, const aiScene *scene, std::vector<Vertex>& vertices, std::vector<GLuint>& indices)
+// {
+// 	for (size_t i = 0; i < node->mNumMeshes; ++i)
+// 	{
+// 		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
+// 		processMesh(mesh, vertices, indices);
+// 	}
+
+// 	for (size_t i = 0; i < node->mNumChildren; ++i)
+// 		processNode(node->mChildren[i], scene, vertices, indices);
+// }
+
+Mesh::Mesh(const char *path, glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
 {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -33,52 +79,21 @@ Mesh::Mesh(const char* path, const char* directory, glm::vec3 transform, glm::ve
 	m_rotation = rotation;
 	m_scale = scale;
 
-	//Model loading
-	{
-		tinyobj::attrib_t attr;
-		std::vector<tinyobj::shape_t> shapes;
-		std::vector<tinyobj::material_t> materials;
-		std::string err;
+	// Assimp::Importer importer;
 
-		bool loaded = tinyobj::LoadObj(&attr, &shapes, &materials, &err, path, directory, true);
+	// const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
 
-		if(!loaded)
-		{
-			LOG_ERROR("Unable to load model!\n");
-			LOG_DEBUG("Error message: %s", err.c_str());
-			return;
-		}
+	// if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+	// {
+	// 	LOG_ERROR("Unable to open model, error message: %s", importer.GetErrorString());
+	// 	return;
+	// }
 
-		for (const auto& shape : shapes)
-		{
-			for (const auto& index : shape.mesh.indices)
-			{
-				Vertex v;
-				v.position.x = attr.vertices[3 * index.vertex_index + 0];
-				v.position.y = attr.vertices[3 * index.vertex_index + 1];
-				v.position.z = attr.vertices[3 * index.vertex_index + 2];
+	// processNode(scene->mRootNode, scene, this->vertices, this->indices);
 
-				v.color = {1.f,1.f,1.f,1.f};
+	loadObj(path, vertices, faces);
 
-				if (index.normal_index >= 0)
-				{
-					v.normal.x = attr.normals[3 * index.normal_index + 0];
-					v.normal.y = attr.normals[3 * index.normal_index + 1];
-					v.normal.z = attr.normals[3 * index.normal_index + 2];
-				}
-
-				if (index.texcoord_index >= 0)
-				{
-					v.texCoords.x = attr.texcoords[2 * index.texcoord_index + 0];
-					v.texCoords.y = attr.texcoords[2 * index.texcoord_index + 1];
-				}
-				vertices.push_back(v);
-				indices.push_back(index.vertex_index);
-			}
-		}
-	}
-
-	update();	
+	update();
 	submit();
 }
 
@@ -97,7 +112,7 @@ void Mesh::draw()
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	else
 		glDrawArrays(GL_TRIANGLES, vertices.data()->position[0], vertices.size());
-	
+
 	glBindVertexArray(0);
 }
 
@@ -110,7 +125,7 @@ void Mesh::submit()
 		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 	else
 		glBufferData(GL_ARRAY_BUFFER, 0, NULL, GL_STATIC_DRAW);
-	
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	if (indices.size() > 0)
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
@@ -118,54 +133,52 @@ void Mesh::submit()
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 0, NULL, GL_STATIC_DRAW);
 
 	// Position
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, position));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid *)offsetof(Vertex, position));
 	glEnableVertexAttribArray(0);
 
 	// Color
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, color));
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid *)offsetof(Vertex, color));
 	glEnableVertexAttribArray(1);
 
 	// TexCoords
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texCoords));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid *)offsetof(Vertex, texCoords));
 	glEnableVertexAttribArray(2);
 
 	// Normals
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),(GLvoid*)offsetof(Vertex, normal));
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid *)offsetof(Vertex, normal));
 	glEnableVertexAttribArray(3);
 
 	glBindVertexArray(0);
 }
 
-const glm::mat4& Mesh::getModelMatrix()
+const glm::mat4 &Mesh::getModelMatrix()
 {
 	return m_modelMatrix;
 }
 
-Mesh* Mesh::Plane(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, glm::vec4 color)
+Mesh *Mesh::Plane(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, glm::vec4 color)
 {
-	Mesh* mesh = new Mesh(transform, rotation, scale);
+	Mesh *mesh = new Mesh(transform, rotation, scale);
 
 	mesh->vertices =
-	{
-		{{-0.5f, 0.5f, 0.f}, color, {0.f, 1.f}, {0.f,0.f,1.f}},
-		{{-0.5f,-0.5f,0.f},	color, {0.f, 0.f}, {0.f,0.f,1.f}},
-		{{0.5f,-0.5f,0.f},	color, {1.f, 0.f}, {0.f,0.f,1.f}},
-		{{0.5f,0.5f,0.f},	color, {1.f, 1.f}, {0.f,0.f,1.f}}
-	};
-	mesh->indices = 
-	{
-		0,1,2,
-		0,2,3
-	};
+		{
+			{{-0.5f, 0.5f, 0.f}, color, {0.f, 1.f}, {0.f, 0.f, 1.f}},
+			{{-0.5f, -0.5f, 0.f}, color, {0.f, 0.f}, {0.f, 0.f, 1.f}},
+			{{0.5f, -0.5f, 0.f}, color, {1.f, 0.f}, {0.f, 0.f, 1.f}},
+			{{0.5f, 0.5f, 0.f}, color, {1.f, 1.f}, {0.f, 0.f, 1.f}}};
+	mesh->indices =
+		{
+			0, 1, 2,
+			0, 2, 3};
 
 	mesh->submit();
 
 	return mesh;
 }
 
-Mesh* Mesh::Cube(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, glm::vec4 color)
+Mesh *Mesh::Cube(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, glm::vec4 color)
 {
-	Mesh* mesh = new Mesh(transform, rotation, scale);
+	Mesh *mesh = new Mesh(transform, rotation, scale);
 
 	// mesh->vertices =
 	// {
@@ -201,65 +214,64 @@ Mesh* Mesh::Cube(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, glm::
 	// 	5,2,6
 	// };
 
-	mesh->vertices = 
-	{
-		{{-1.0f, -1.0f,  1.0f}, color,  {0.f,0.f},{0.0f, 0.0f, 1.0f}},  // Bottom-left
-     	{{1.0f, -1.0f,  1.0f},  color , {1.f,0.f},{0.0f, 0.0f, 1.0f}},  // Bottom-right
-     	{{1.0f,  1.0f,  1.0f},  color , {1.f,1.f},{0.0f, 0.0f, 1.0f}},  // Top-right
-    	{{-1.0f,  1.0f,  1.0f}, color , {0.f,1.f}, {0.0f, 0.0f, 1.0f}},  // Top-left}
-		
-    	{{-1.0f, -1.0f, -1.0f}, color ,{0.0f, 0.0f},  {0.0f,  0.0f, -1.0f}},  // Back-bottom-left
-    	{{ 1.0f, -1.0f, -1.0f}, color ,{1.0f, 0.0f},  {0.0f,  0.0f, -1.0f}},  // Back-bottom-right
-    	{{ 1.0f,  1.0f, -1.0f}, color ,{1.0f, 1.0f},  {0.0f,  0.0f, -1.0f}},  // Back-top-right
-    	{{-1.0f,  1.0f, -1.0f}, color ,{0.0f, 1.0f},  {0.0f,  0.0f, -1.0f}},  // Back-top-left
-		
-		{{-1.0f,  1.0f,  1.0f}, color, {0.0f, 0.0f},  {0.0f,  1.0f,  0.0f}},  // Top-bottom-left
-     	{{1.0f,  1.0f,  1.0f},  color, {1.0f, 0.0f},  {0.0f,  1.0f,  0.0f}},  // Top-bottom-right
-     	{{1.0f,  1.0f, -1.0f},  color, {1.0f, 1.0f},  {0.0f,  1.0f,  0.0f}},  // Top-top-right
-    	{{-1.0f,  1.0f, -1.0f},  color, {0.0f, 1.0f},  {0.0f,  1.0f,  0.0f}},  // Top-top-left
-	
-		{{-1.0f, -1.0f,  1.0f},  color, {0.0f, 0.0f},  {0.0f, -1.0f,  0.0f}},  // Bottom-bottom-left
-    	{{ 1.0f, -1.0f,  1.0f},  color, {1.0f, 0.0f},  {0.0f, -1.0f,  0.0f}},  // Bottom-bottom-right
-    	{{ 1.0f, -1.0f, -1.0f},  color, {1.0f, 1.0f},  {0.0f, -1.0f,  0.0f}},  // Bottom-top-right
-    	{{-1.0f, -1.0f, -1.0f},  color, {0.0f, 1.0f},  {0.0f, -1.0f,  0.0f}},  // Bottom-top-left
+	mesh->vertices =
+		{
+			{{-1.0f, -1.0f, 1.0f}, color, {0.f, 0.f}, {0.0f, 0.0f, 1.0f}}, // Bottom-left
+			{{1.0f, -1.0f, 1.0f}, color, {1.f, 0.f}, {0.0f, 0.0f, 1.0f}},  // Bottom-right
+			{{1.0f, 1.0f, 1.0f}, color, {1.f, 1.f}, {0.0f, 0.0f, 1.0f}},   // Top-right
+			{{-1.0f, 1.0f, 1.0f}, color, {0.f, 1.f}, {0.0f, 0.0f, 1.0f}},  // Top-left}
 
-		{{1.0f, -1.0f,  1.0f}, color ,{0.0f, 0.0f},  {1.0f,  0.0f,  0.0f}},  // Right-bottom-left
-     	{{1.0f,  1.0f,  1.0f}, color ,{1.0f, 0.0f},  {1.0f,  0.0f,  0.0f}},  // Right-bottom-right
-     	{{1.0f,  1.0f, -1.0f}, color ,{1.0f, 1.0f},  {1.0f,  0.0f,  0.0f}},  // Right-top-right
-     	{{1.0f, -1.0f, -1.0f}, color ,{0.0f, 1.0f},  {1.0f,  0.0f,  0.0f}},  // Right-top-left
+			{{-1.0f, -1.0f, -1.0f}, color, {0.0f, 0.0f}, {0.0f, 0.0f, -1.0f}}, // Back-bottom-left
+			{{1.0f, -1.0f, -1.0f}, color, {1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}},  // Back-bottom-right
+			{{1.0f, 1.0f, -1.0f}, color, {1.0f, 1.0f}, {0.0f, 0.0f, -1.0f}},   // Back-top-right
+			{{-1.0f, 1.0f, -1.0f}, color, {0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}},  // Back-top-left
 
-		{{-1.0f, -1.0f,  1.0f}, color, {0.0f, 0.0f}, {-1.0f,  0.0f,  0.0f}},  // Left-bottom-left
-    	{{-1.0f,  1.0f,  1.0f}, color, {1.0f, 0.0f}, {-1.0f,  0.0f,  0.0f}},  // Left-bottom-right
-    	{{-1.0f,  1.0f, -1.0f}, color, {1.0f, 1.0f}, {-1.0f,  0.0f,  0.0f}},  // Left-top-right
-    	{{-1.0f, -1.0f, -1.0f}, color, {0.0f, 1.0f}, {-1.0f,  0.0f,  0.0f}}   // Left-top-left
-	};
+			{{-1.0f, 1.0f, 1.0f}, color, {0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}},	 // Top-bottom-left
+			{{1.0f, 1.0f, 1.0f}, color, {1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}},	 // Top-bottom-right
+			{{1.0f, 1.0f, -1.0f}, color, {1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},	 // Top-top-right
+			{{-1.0f, 1.0f, -1.0f}, color, {0.0f, 1.0f}, {0.0f, 1.0f, 0.0f}}, // Top-top-left
+
+			{{-1.0f, -1.0f, 1.0f}, color, {0.0f, 0.0f}, {0.0f, -1.0f, 0.0f}},  // Bottom-bottom-left
+			{{1.0f, -1.0f, 1.0f}, color, {1.0f, 0.0f}, {0.0f, -1.0f, 0.0f}},   // Bottom-bottom-right
+			{{1.0f, -1.0f, -1.0f}, color, {1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}},  // Bottom-top-right
+			{{-1.0f, -1.0f, -1.0f}, color, {0.0f, 1.0f}, {0.0f, -1.0f, 0.0f}}, // Bottom-top-left
+
+			{{1.0f, -1.0f, 1.0f}, color, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},	 // Right-bottom-left
+			{{1.0f, 1.0f, 1.0f}, color, {1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},	 // Right-bottom-right
+			{{1.0f, 1.0f, -1.0f}, color, {1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},	 // Right-top-right
+			{{1.0f, -1.0f, -1.0f}, color, {0.0f, 1.0f}, {1.0f, 0.0f, 0.0f}}, // Right-top-left
+
+			{{-1.0f, -1.0f, 1.0f}, color, {0.0f, 0.0f}, {-1.0f, 0.0f, 0.0f}}, // Left-bottom-left
+			{{-1.0f, 1.0f, 1.0f}, color, {1.0f, 0.0f}, {-1.0f, 0.0f, 0.0f}},  // Left-bottom-right
+			{{-1.0f, 1.0f, -1.0f}, color, {1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}}, // Left-top-right
+			{{-1.0f, -1.0f, -1.0f}, color, {0.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}} // Left-top-left
+		};
 
 	mesh->indices =
-	{
-		// Front face
-    	0, 1, 2,
-		2, 3, 0,
+		{
+			// Front face
+			0, 1, 2,
+			2, 3, 0,
 
-    	// Back face
-    	4, 5, 6,
-		6, 7, 4,
+			// Back face
+			4, 5, 6,
+			6, 7, 4,
 
-    	// Top face
-    	8, 9, 10,
-		10, 11, 8,
+			// Top face
+			8, 9, 10,
+			10, 11, 8,
 
-    	// Bottom face
-    	12, 13, 14,
-		14, 15, 12,
+			// Bottom face
+			12, 13, 14,
+			14, 15, 12,
 
-    	// Right face
-    	16, 17, 18,
-		18, 19, 16,
+			// Right face
+			16, 17, 18,
+			18, 19, 16,
 
-    	// Left face
-    	20, 21, 22,
-		22, 23, 20
-	};
+			// Left face
+			20, 21, 22,
+			22, 23, 20};
 
 	mesh->submit();
 	return mesh;
@@ -305,4 +317,72 @@ void Mesh::update()
 	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(m_rotation.y), glm::vec3(0.f, 1.f, 0.f));
 	m_modelMatrix = glm::rotate(m_modelMatrix, glm::radians(m_rotation.z), glm::vec3(0.f, 0.f, 1.f));
 	m_modelMatrix = glm::scale(m_modelMatrix, m_scale);
+}
+
+bool Mesh::loadObj(const char* filename, std::vector<Vertex> &outVertices, std::vector<Face> &outFaces) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Failed to open file " << filename << std::endl;
+        return false;
+    }
+
+    std::vector<glm::vec3> tempVertices;
+    std::vector<glm::vec3> tempNormals;
+    std::vector<glm::vec2> tempTexCoords;
+    
+    std::string line;
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        std::string type;
+        ss >> type;
+
+        if (type == "v") {  // Vertex position
+            glm::vec3 vertex;
+            ss >> vertex.x >> vertex.y >> vertex.z;
+            tempVertices.push_back(vertex);
+        }
+        else if (type == "vn") {  // Vertex normal
+            glm::vec3 normal;
+            ss >> normal.x >> normal.y >> normal.z;
+            tempNormals.push_back(normal);
+        }
+        else if (type == "vt") {  // Texture coordinates
+            glm::vec2 texCoord;
+            ss >> texCoord.x >> texCoord.y;
+            tempTexCoords.push_back(texCoord);
+        }
+        else if (type == "f") {  // Face
+            Face face;
+            std::string vertexData;
+            while (ss >> vertexData) {
+                std::replace(vertexData.begin(), vertexData.end(), '/', ' ');  // Replace '/' with space to split
+
+                std::stringstream vertexStream(vertexData);
+                unsigned int vIndex, tIndex, nIndex;
+
+                vertexStream >> vIndex >> tIndex >> nIndex;
+                face.vertexInd.push_back(vIndex - 1);  // OBJ indices are 1-based, but C++ vectors are 0-based
+                face.texCoordInd.push_back(tIndex - 1);
+                face.normalInd.push_back(nIndex - 1);
+            }
+            outFaces.push_back(face);
+        }
+    }
+
+    // Now fill outVertices with actual data from the temporary lists
+    for (const auto &face : outFaces) {
+        for (size_t i = 0; i < face.vertexInd.size(); ++i) {
+            glm::vec3 pos = tempVertices[face.vertexInd[i]];
+            glm::vec2 tex = tempTexCoords[face.texCoordInd[i]];
+            glm::vec3 norm = tempNormals[face.normalInd[i]];
+			Vertex ver;
+			ver.position = pos;
+			ver.color = {1.f, 1.f, 1.f, 1.f};
+			ver.normal = norm;
+			ver.texCoords = tex;
+            outVertices.push_back(ver);
+        }
+    }
+
+    return true;
 }
