@@ -7,6 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
 #include <vector>
+#include "Shader.h"
 
 extern "C" struct BALKAN3D_API Vertex
 {
@@ -26,8 +27,8 @@ extern "C" struct BALKAN3D_API Face
 extern "C" class BALKAN3D_API Mesh
 {
 public:
-	Mesh(glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f));
-	Mesh(const char* path, glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f));
+	Mesh(Shader* shader, glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f));
+	Mesh(const char* path, Shader* shader, glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f));
 	~Mesh();
 
 	void draw(); 
@@ -43,9 +44,12 @@ public:
 	void setPosition(glm::vec3 transform);
 	void setRotation(glm::vec3 rotation);
 	void setScale(glm::vec3 scale);
+	void setShader(Shader* newShader);
+
 	glm::vec3 getPosition() const;
 	glm::vec3 getRotation() const;
 	glm::vec3 getScale() const;
+	Shader* getShader() const;
 
 private:
 	void update();
@@ -64,6 +68,8 @@ private:
 	glm::vec3 m_transform;
 	glm::vec3 m_rotation;
 	glm::vec3 m_scale;
+
+	Shader* m_shader;
 
 };
 #endif //GRAPHICS_MESH_H

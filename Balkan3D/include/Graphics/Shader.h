@@ -35,10 +35,15 @@ public:
 	void setmat4fv(const char* name, glm::fmat4 value, GLboolean transpose = 0);
 
 	GLuint getId() const;
+	char* getVertexPath() const;
+	char* getFragmentPath() const; 
+
 
 private:
 	GLuint m_id;
 	GLuint m_vertexShader;
 	GLuint m_fragmentShader;
+	std::string m_vertexPath;
+	std::string m_fragmentPath;
 };
 #endif //GRAPHICS_SHADER_H

@@ -37,6 +37,9 @@ Shader::Shader(std::string vertex, std::string fragment)
 	glAttachShader(m_id, m_vertexShader);
 	glAttachShader(m_id, m_fragmentShader);
 	glLinkProgram(m_id);
+
+	m_vertexPath = nullptr;
+	m_vertexPath = nullptr;
 }
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
@@ -108,6 +111,9 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 		glAttachShader(m_id, m_fragmentShader);
 		glLinkProgram(m_id);
 	}
+
+	m_vertexPath = vertexPath;
+	m_fragmentPath = fragmentPath;
 }
 
 Shader::~Shader()
@@ -167,4 +173,14 @@ void Shader::setmat4fv(const char* name, glm::fmat4 value, GLboolean transpose)
 GLuint Shader::getId() const
 {
 	return m_id;
+}
+
+char *Shader::getVertexPath() const
+{
+    return (char*) m_vertexPath.c_str();
+}
+
+ char *Shader::getFragmentPath() const
+{
+    return (char*) m_fragmentPath.c_str();
 }

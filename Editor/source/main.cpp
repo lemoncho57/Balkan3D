@@ -9,8 +9,8 @@
 #include <Balkan3D/include/Graphics/Camera.h>
 #include <Balkan3D/include/Time/Clock.h>
 #include <Balkan3D/include/Graphics/Light.h>
+#include <Balkan3D/include/Graphics/Material.h>
 #include <string>
-
 
 
 // Code is just for testing
@@ -59,12 +59,22 @@ int main(void)
 
 	Camera camera(glm::vec3(0.f, 0.f, 3.f), 50.f, (float) window.getWidth() / (float) window.getHeight());
 
-	Mesh bmw("bmwe34/source/BMW M5 E34.obj");
+	Mesh bmw("bmwe34/source/BMW M5 E34.obj", &shader);
 	Mesh& mesh = *Mesh::Cube();
 	Mesh& mesh2 = *Mesh::Plane();
 
+	mesh.setShader(&shader);
+	mesh2.setShader(&shader);
+
 	Texture texture("Ne_e_shoferska.png");
 	Texture texture2("Bira.png");
+
+	Material mat =
+	{
+		.diffuse = {1.f, 1.f, 1.f},
+		.specular = {1.f,1.f,1.f},
+		.shininess = 1
+	};
 
 	Light light;
 	light.pos = {-2.78f,0.f,-2.3f};
@@ -160,16 +170,20 @@ int main(void)
 		shader.setvec3f("lightColor", light.color);
 		shader.setvec3f("camPos", camera.getPosition());
 
-		shader.setmat4fv("modelMatrix", bmw.getModelMatrix(), 0);
+		shader.setvec3f("material.diffuse", mat.diffuse);
+		shader.setvec3f("material.specular", mat.specular);
+		shader.set1f("material.shininess", mat.shininess);
+
+		// shader.setmat4fv("modelMatrix", bmw.getModelMatrix(), 0);
 		bmw.draw();
 
 		texture.activateTexture(0x84C0);
 		texture.use();
 		texture2.activateTexture(0x84C1);
 		texture2.use();
-		shader.setmat4fv("modelMatrix", mesh.getModelMatrix(), 0);
+		// shader.setmat4fv("modelMatrix", mesh.getModelMatrix(), 0);
 		mesh.draw();
-		shader.setmat4fv("modelMatrix", mesh2.getModelMatrix(), 0);
+		// shader.setmat4fv("modelMatrix", mesh2.getModelMatrix(), 0);
 		mesh2.draw();
 		
 		if (events.isKeyPressed(KeyCodes::KEY_ESCAPE))
