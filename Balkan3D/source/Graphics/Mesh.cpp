@@ -7,7 +7,7 @@
 #include <fstream>
 #include <sstream>
 
-Mesh::Mesh(Shader* shader, glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
+Mesh::Mesh(Shader* shader, const std::string& name,glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
 {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -20,10 +20,11 @@ Mesh::Mesh(Shader* shader, glm::vec3 transform, glm::vec3 rotation, glm::vec3 sc
 	m_scale = scale;
 
 	m_shader = shader;
+	this->name = name;
 
 	if (!m_shader)
 	{
-		LOG_WARNING("No shader specified! \n");
+		LOG_WARNING("No shader for %s specified! \n", name.c_str());
 	}
 	else
 		LOG_DEBUG("Shader file %s", m_shader->getVertexPath());
@@ -32,7 +33,7 @@ Mesh::Mesh(Shader* shader, glm::vec3 transform, glm::vec3 rotation, glm::vec3 sc
 	submit();
 }
 
-Mesh::Mesh(const char *path, Shader* shader, glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
+Mesh::Mesh(const char *path, Shader* shader, const std::string& name, glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
 {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -47,10 +48,11 @@ Mesh::Mesh(const char *path, Shader* shader, glm::vec3 transform, glm::vec3 rota
 	loadObj(path);
 
 	m_shader = shader;
+	this->name = name;
 
 	if (!m_shader)
 	{
-		LOG_WARNING("No shader specified! \n");
+		LOG_WARNING("No shader for %s specified! \n", name.c_str());
 	}
 	else
 		LOG_DEBUG("Shader file %s", m_shader->getVertexPath());
@@ -123,10 +125,10 @@ const glm::mat4 &Mesh::getModelMatrix()
 	return m_modelMatrix;
 }
 
-Mesh *Mesh::Plane(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, glm::vec4 color)
+Mesh *Mesh::Plane(const std::string& name,glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, glm::vec4 color)
 {
 	// TODO: Once default shaders is implemented remove nullptr
-	Mesh *mesh = new Mesh(nullptr, transform, rotation, scale);
+	Mesh *mesh = new Mesh(nullptr, name, transform, rotation, scale);
 
 	mesh->vertices =
 		{
@@ -140,14 +142,13 @@ Mesh *Mesh::Plane(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, glm:
 			0, 2, 3};
 
 	mesh->submit();
-
 	return mesh;
 }
 
-Mesh *Mesh::Cube(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, glm::vec4 color)
+Mesh *Mesh::Cube(const std::string& name,glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale, glm::vec4 color)
 {
 	// TODO: Once default shaders is implemented remove nullptr
-	Mesh *mesh = new Mesh(nullptr,transform, rotation, scale);
+	Mesh *mesh = new Mesh(nullptr, name, transform, rotation, scale);
 
 	// mesh->vertices =
 	// {

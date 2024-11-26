@@ -27,8 +27,8 @@ extern "C" struct BALKAN3D_API Face
 extern "C" class BALKAN3D_API Mesh
 {
 public:
-	Mesh(Shader* shader, glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f));
-	Mesh(const char* path, Shader* shader, glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f));
+	Mesh(Shader* shader, const std::string& name = "Mesh", glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f));
+	explicit Mesh(const char* path, Shader* shader, const std::string& name = "Mesh", glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f));
 	~Mesh();
 
 	void draw(); 
@@ -37,9 +37,9 @@ public:
 
 	const glm::mat4& getModelMatrix();
 
-	static Mesh* Plane(glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f), glm::vec4 color = glm::vec4(1.f,1.f,1.f,1.f));
+	static Mesh* Plane(const std::string& name = "Plane",glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f), glm::vec4 color = glm::vec4(1.f,1.f,1.f,1.f));
 	// TODO: Fix cube texture
-	static Mesh* Cube(glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f), glm::vec4 color = glm::vec4(1.f,1.f,1.f,1.f));
+	static Mesh* Cube(const std::string& name = "Cube",glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f), glm::vec4 color = glm::vec4(1.f,1.f,1.f,1.f));
 
 	void setPosition(glm::vec3 transform);
 	void setRotation(glm::vec3 rotation);
@@ -59,6 +59,8 @@ public:
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
 	std::vector<Face> faces;
+
+	std::string name;
 private:
 	GLuint VAO = 0;
 	GLuint VBO = 0;
