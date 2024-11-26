@@ -23,50 +23,6 @@ Mesh::Mesh(glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
 	submit();
 }
 
-// void processMesh(aiMesh *mesh, std::vector<Vertex>& vertices, std::vector<GLuint>& indices)
-// {
-// 	for (size_t i = 0; i < mesh->mNumVertices; ++i)
-// 	{
-// 		Vertex v;
-// 		aiVector3D pos = mesh->mVertices[i];
-// 		v.position = glm::vec3{pos.x, pos.y, pos.z};
-// 		v.color = glm::vec4{1.f, 1.f, 1.f, 1.f};
-
-// 		if (mesh->HasNormals())
-// 		{
-// 			aiVector3D normals = mesh->mNormals[i];
-// 			v.normal = glm::vec3{normals.x, normals.y, normals.z};
-// 		}
-
-// 		if (mesh->mTextureCoords[0])
-// 		{
-// 			aiVector3D texCoords = mesh->mTextureCoords[0][i];
-// 			v.texCoords = glm::vec2{texCoords.x, texCoords.y};
-// 		}
-
-// 		vertices.push_back(v);
-// 	}
-
-// 	for (size_t i = 0; i < mesh->mNumFaces; ++i)
-// 	{
-// 		aiFace face = mesh->mFaces[i];
-// 		for (size_t j = 0; j < face.mNumIndices; ++j)
-// 			indices.push_back((GLuint)face.mIndices[j]);
-// 	}
-// }
-
-// void processNode(aiNode *node, const aiScene *scene, std::vector<Vertex>& vertices, std::vector<GLuint>& indices)
-// {
-// 	for (size_t i = 0; i < node->mNumMeshes; ++i)
-// 	{
-// 		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-// 		processMesh(mesh, vertices, indices);
-// 	}
-
-// 	for (size_t i = 0; i < node->mNumChildren; ++i)
-// 		processNode(node->mChildren[i], scene, vertices, indices);
-// }
-
 Mesh::Mesh(const char *path, glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
 {
 	glGenVertexArrays(1, &VAO);
@@ -79,19 +35,7 @@ Mesh::Mesh(const char *path, glm::vec3 transform, glm::vec3 rotation, glm::vec3 
 	m_rotation = rotation;
 	m_scale = scale;
 
-	// Assimp::Importer importer;
-
-	// const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
-
-	// if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-	// {
-	// 	LOG_ERROR("Unable to open model, error message: %s", importer.GetErrorString());
-	// 	return;
-	// }
-
-	// processNode(scene->mRootNode, scene, this->vertices, this->indices);
-
-	loadObj(path, vertices, faces);
+	loadObj(path);
 
 	update();
 	submit();
@@ -319,7 +263,7 @@ void Mesh::update()
 	m_modelMatrix = glm::scale(m_modelMatrix, m_scale);
 }
 
-bool Mesh::loadObj(const char* filename, std::vector<Vertex> &outVertices, std::vector<Face> &outFaces) {
+bool Mesh::loadObj(const char* filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Failed to open file " << filename << std::endl;
@@ -336,41 +280,39 @@ bool Mesh::loadObj(const char* filename, std::vector<Vertex> &outVertices, std::
         std::string type;
         ss >> type;
 
-        if (type == "v") {  // Vertex position
+        if (type == "v") {  
             glm::vec3 vertex;
             ss >> vertex.x >> vertex.y >> vertex.z;
             tempVertices.push_back(vertex);
         }
-        else if (type == "vn") {  // Vertex normal
+        else if (type == "vn") { 
             glm::vec3 normal;
             ss >> normal.x >> normal.y >> normal.z;
             tempNormals.push_back(normal);
         }
-        else if (type == "vt") {  // Texture coordinates
+        else if (type == "vt") { 
             glm::vec2 texCoord;
             ss >> texCoord.x >> texCoord.y;
             tempTexCoords.push_back(texCoord);
         }
-        else if (type == "f") {  // Face
+        else if (type == "f") {
             Face face;
             std::string vertexData;
             while (ss >> vertexData) {
-                std::replace(vertexData.begin(), vertexData.end(), '/', ' ');  // Replace '/' with space to split
+                std::replace(vertexData.begin(), vertexData.end(), '/', ' ');
 
                 std::stringstream vertexStream(vertexData);
                 unsigned int vIndex, tIndex, nIndex;
 
                 vertexStream >> vIndex >> tIndex >> nIndex;
-                face.vertexInd.push_back(vIndex - 1);  // OBJ indices are 1-based, but C++ vectors are 0-based
+                face.vertexInd.push_back(vIndex - 1);
                 face.texCoordInd.push_back(tIndex - 1);
                 face.normalInd.push_back(nIndex - 1);
             }
-            outFaces.push_back(face);
+            faces.push_back(face);
         }
     }
-
-    // Now fill outVertices with actual data from the temporary lists
-    for (const auto &face : outFaces) {
+    for (const auto &face : faces) {
         for (size_t i = 0; i < face.vertexInd.size(); ++i) {
             glm::vec3 pos = tempVertices[face.vertexInd[i]];
             glm::vec2 tex = tempTexCoords[face.texCoordInd[i]];
@@ -380,7 +322,7 @@ bool Mesh::loadObj(const char* filename, std::vector<Vertex> &outVertices, std::
 			ver.color = {1.f, 1.f, 1.f, 1.f};
 			ver.normal = norm;
 			ver.texCoords = tex;
-            outVertices.push_back(ver);
+            vertices.push_back(ver);
         }
     }
 

@@ -30,7 +30,6 @@ public:
 	Mesh(const char* path, glm::vec3 transform = glm::vec3(0.f, 0.f, 0.f), glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f), glm::vec3 scale = glm::vec3(1.f, 1.f, 1.f));
 	~Mesh();
 
-	//void use(); // This is already done in draw
 	void draw(); 
 
 	void submit();
@@ -50,7 +49,7 @@ public:
 
 private:
 	void update();
-	bool loadObj(const char* file, std::vector<Vertex> &outVertices, std::vector<Face> &outFaces);
+	bool loadObj(const char* file);
 
 public:
 	std::vector<Vertex> vertices;

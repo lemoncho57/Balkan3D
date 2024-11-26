@@ -59,13 +59,7 @@ int main(void)
 
 	Camera camera(glm::vec3(0.f, 0.f, 3.f), 50.f, (float) window.getWidth() / (float) window.getHeight());
 
-<<<<<<< HEAD
-	Mesh bmw("bmw/source/BMW M5 E34.obj", 0);
-=======
-	//Mesh bmw("bmwe34/source/BMW M5 E34.obj");
-	//Mesh bmw("bmw/source/sketchfab e34.fbx");
 	Mesh bmw("bmwe34/source/BMW M5 E34.obj");
->>>>>>> be38ebe (Fix (Linux Test): The model loader now works (.obj ONLY))
 	Mesh& mesh = *Mesh::Cube();
 	Mesh& mesh2 = *Mesh::Plane();
 
