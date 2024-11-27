@@ -8,6 +8,7 @@ extern "C" class BALKAN3D_API Texture
 {
 public:
 	Texture(const char* fileName, bool flipImage = true);
+	// explicit Texture(glm::vec4 color);
 	~Texture();
 
 	void activateTexture(GLenum texure);

@@ -34,9 +34,12 @@ public:
 	void setmat3fv(const char* name, glm::fmat3 value, GLboolean transpose = 0);
 	void setmat4fv(const char* name, glm::fmat4 value, GLboolean transpose = 0);
 
+	void setName(const std::string& newName);
+
 	GLuint getId() const;
 	char* getVertexPath() const;
 	char* getFragmentPath() const; 
+	const std::string& getName() const;
 
 
 private:
@@ -45,5 +48,6 @@ private:
 	GLuint m_fragmentShader;
 	std::string m_vertexPath;
 	std::string m_fragmentPath;
+	std::string m_name;
 };
 #endif //GRAPHICS_SHADER_H

@@ -85,10 +85,10 @@ void Camera::move(int direction, float speed)
 		m_pos += m_cameraRight * speed * Clock::getDeltaTime();
 		break;
 	case CAMERA_DIRECTION_UP:
-		m_pos += m_cameraUp * speed * Clock::getDeltaTime();
+		m_pos += m_worldUp * speed * Clock::getDeltaTime();
 		break;
 	case CAMERA_DIRECTION_DOWN:
-		m_pos -= m_cameraUp * speed * Clock::getDeltaTime();
+		m_pos -= m_worldUp * speed * Clock::getDeltaTime();
 		break;
 	default:
 		break;

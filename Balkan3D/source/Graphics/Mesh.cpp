@@ -268,6 +268,19 @@ void Mesh::setScale(glm::vec3 scale)
 void Mesh::setShader(Shader* newShader)
 {
 	m_shader = newShader;
+	if (!newShader)
+	{
+		LOG_ERROR("Invalid shader ")
+	}
+	if (newShader->getName().c_str() == 0)
+	{
+		LOG_INFO("Using shader(id): %s for %s", newShader->getId(), name.c_str());
+	}
+	else
+	{
+		LOG_INFO("Using shader(name): %s for %s", newShader->getName().c_str(), name.c_str());
+		LOG_DEBUG("Using shader(id): %s for %s", newShader->getId(), name.c_str());
+	}
 }
 
 glm::vec3 Mesh::getPosition() const

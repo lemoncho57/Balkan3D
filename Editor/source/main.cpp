@@ -1,5 +1,5 @@
-#include <Balkan3D/include/Logging/Loging.h>
 #include <Balkan3D/include/Window.h>
+#include <Balkan3D/include/Logging/Loging.h>
 #include <Balkan3D/include/Events/Events.h>
 #include <Balkan3D/include/Logging/Asserts.h>
 #include <Balkan3D/include/Graphics/GraphicsUtils.h>
@@ -12,50 +12,14 @@
 #include <Balkan3D/include/Graphics/Material.h>
 #include <string>
 
-
 // Code is just for testing
 int main(void)
 {
 	Window window("Idk", 1280, 720);
 	Events events;
-
-	// Shader shader(/*Vertex Shader*/ R"(
-	// 				#version 410 core
-	// 				layout (location = 0) in vec3 aPos;
-	// 				layout (location = 1) in vec4 aColor;
-	// 				layout (location = 2) in vec2 aTexCoords;
-
-	// 				out vec4 color;
-	// 				out vec2 texCoords;
-
-	// 				uniform mat4 camMatrix;
-	// 				uniform mat4 projMatrix;
-	// 				uniform mat4 modelMatrix;
-
-	// 				void main()
-	// 				{
-	// 					gl_Position = projMatrix * camMatrix * modelMatrix * vec4(aPos, 1.0);
-	// 					color = aColor;
-	// 					texCoords = aTexCoords;
-	// 				})",
-	// 				/*Fragment*/R"(
-	// 				#version 410 core
-	// 				out vec4 fragColor;
-					
-	// 				in vec4 color;
-	// 				in vec2 texCoords;
-					
-	// 				uniform vec3 userColor;
-	// 				uniform sampler2D tex;
-	// 				uniform sampler2D tex2;
-			
-	// 				void main()
-	// 				{
-	// 					fragColor = mix(texture(tex, texCoords), texture(tex2, texCoords), 0.4) * vec4(userColor, 1.0);
-	// 				}
-	// 				)");
-
+ 
 	Shader shader((const char*)"vertex.glsl", (const char*)"fragment.glsl");
+	shader.setName("Default");
 
 	Camera camera(glm::vec3(0.f, 0.f, 3.f), 50.f, (float) window.getWidth() / (float) window.getHeight());
 
@@ -69,12 +33,7 @@ int main(void)
 	Texture texture("Ne_e_shoferska.png");
 	Texture texture2("Bira.png");
 
-	Material mat =
-	{
-		.diffuse = {1.f, 1.f, 1.f},
-		.specular = {1.f,1.f,1.f},
-		.shininess = 1
-	};
+	Material mat(1.f);
 
 	Light light;
 	light.pos = {-2.78f,0.f,-2.3f};
@@ -163,7 +122,6 @@ int main(void)
 
 		shader.use();
 		shader.set1i("tex", 0);
-		shader.set1i("tex2", 1);
 		shader.setmat4fv("camMatrix", camera.getViewMatrix(), 0);
 		shader.setmat4fv("projMatrix", camera.getProjectionMatrix(), 0);
 		shader.setvec3f("lightPos", light.pos);
@@ -174,23 +132,20 @@ int main(void)
 		shader.setvec3f("material.specular", mat.specular);
 		shader.set1f("material.shininess", mat.shininess);
 
-		// shader.setmat4fv("modelMatrix", bmw.getModelMatrix(), 0);
-		bmw.draw();
-
-		texture.activateTexture(0x84C0);
+		// texture.activateTexture(0x84C0);
 		texture.use();
-		texture2.activateTexture(0x84C1);
+		bmw.draw();
+		texture.unuse();
+		// texture2.activateTexture(0x84C1);
+		// texture2.use();
 		texture2.use();
-		// shader.setmat4fv("modelMatrix", mesh.getModelMatrix(), 0);
 		mesh.draw();
-		// shader.setmat4fv("modelMatrix", mesh2.getModelMatrix(), 0);
 		mesh2.draw();
-		
+		texture2.unuse();
+
 		if (events.isKeyPressed(KeyCodes::KEY_ESCAPE))
 			window.close();
 
-		texture.unuse();
-		texture2.unuse();
 		shader.unuse();
 		window.endDrawing();
 	}

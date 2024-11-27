@@ -15,7 +15,6 @@ in vec3 fragPos;
 
 uniform vec3 userColor;
 uniform sampler2D tex;
-uniform sampler2D tex2;
 uniform vec3 lightPos;
 uniform vec3 lightColor;
 uniform vec3 camPos;
@@ -37,5 +36,5 @@ void main()
 	vec3 specular = (spec * material.specular) /** lightColor*/;
 
 	vec3 result = (ambient + diffuse + specular) * userColor;
-	fragColor = mix(texture(tex, texCoords), texture(tex2, texCoords), 0.4) * vec4(result, 1.0);
+	fragColor = texture(tex, texCoords) * vec4(result, 1.0);
 }

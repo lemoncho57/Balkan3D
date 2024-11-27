@@ -170,6 +170,12 @@ void Shader::setmat4fv(const char* name, glm::fmat4 value, GLboolean transpose)
 	glUniformMatrix4fv(glGetUniformLocation(m_id, name), 1, transpose, glm::value_ptr(value));
 }
 
+void Shader::setName(const std::string &newName)
+{
+	m_name = newName;
+	LOG_DEBUG("Succesfully set new name for shader %u", m_id);
+}
+
 GLuint Shader::getId() const
 {
 	return m_id;
@@ -183,4 +189,9 @@ char *Shader::getVertexPath() const
  char *Shader::getFragmentPath() const
 {
     return (char*) m_fragmentPath.c_str();
+}
+
+const std::string &Shader::getName() const
+{
+	return m_name;
 }
