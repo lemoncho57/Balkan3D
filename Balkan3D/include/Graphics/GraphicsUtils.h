@@ -1,5 +1,6 @@
 #ifndef GRAPHICS_GRAPHICS_UTILS_H
 #define GRAPHICS_GRAPHICS_UTILS_H
+#include "../Defines.h"
 
 namespace GraphicsUtils
 {

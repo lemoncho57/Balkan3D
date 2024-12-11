@@ -17,7 +17,7 @@ int main(void)
 {
 	Window window("Idk", 1280, 720);
 	Events events;
- 
+
 	Shader shader((const char*)"vertex.glsl", (const char*)"fragment.glsl");
 	shader.setName("Default");
 

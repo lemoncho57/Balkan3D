@@ -1,11 +1,9 @@
 #include "pch.h"
 #include "Graphics/Mesh.h"
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
 #include "Logging/Loging.h"
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 Mesh::Mesh(Shader* shader, const std::string& name,glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
 {
@@ -24,7 +22,7 @@ Mesh::Mesh(Shader* shader, const std::string& name,glm::vec3 transform, glm::vec
 
 	if (!m_shader)
 	{
-		LOG_WARNING("No shader for %s specified! \n", name.c_str());
+		LOG_WARNING("No shader for %s specified!", name.c_str());
 	}
 	else
 		LOG_DEBUG("Shader file %s", m_shader->getVertexPath());
@@ -52,7 +50,7 @@ Mesh::Mesh(const char *path, Shader* shader, const std::string& name, glm::vec3 
 
 	if (!m_shader)
 	{
-		LOG_WARNING("No shader for %s specified! \n", name.c_str());
+		LOG_WARNING("No shader for %s specified!", name.c_str());
 	}
 	else
 		LOG_DEBUG("Shader file %s", m_shader->getVertexPath());
@@ -377,3 +375,4 @@ bool Mesh::loadObj(const char* filename) {
 
     return true;
 }
+

@@ -77,3 +77,8 @@ void Texture::unuse()
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+unsigned int Texture::getTexture() const
+{
+	return m_texture;
+}
