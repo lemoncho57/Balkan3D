@@ -310,10 +310,12 @@ void Mesh::update()
 	m_modelMatrix = glm::scale(m_modelMatrix, m_scale);
 }
 
-bool Mesh::loadObj(const char* filename) {
+bool Mesh::loadObj(const char* filename) 
+{
     std::ifstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Failed to open file " << filename << std::endl;
+    if (!file.is_open()) 
+	{
+        LOG_ERROR("Failed to open file %s", filename);
         return false;
     }
 
@@ -322,30 +324,36 @@ bool Mesh::loadObj(const char* filename) {
     std::vector<glm::vec2> tempTexCoords;
     
     std::string line;
-    while (std::getline(file, line)) {
+    while (std::getline(file, line)) 
+	{
         std::stringstream ss(line);
         std::string type;
         ss >> type;
 
-        if (type == "v") {  
+        if (type == "v") 
+		{  
             glm::vec3 vertex;
             ss >> vertex.x >> vertex.y >> vertex.z;
             tempVertices.push_back(vertex);
         }
-        else if (type == "vn") { 
+        else if (type == "vn") 
+		{ 
             glm::vec3 normal;
             ss >> normal.x >> normal.y >> normal.z;
             tempNormals.push_back(normal);
         }
-        else if (type == "vt") { 
+        else if (type == "vt") 
+		{ 
             glm::vec2 texCoord;
             ss >> texCoord.x >> texCoord.y;
             tempTexCoords.push_back(texCoord);
         }
-        else if (type == "f") {
+        else if (type == "f") 
+		{
             Face face;
             std::string vertexData;
-            while (ss >> vertexData) {
+            while (ss >> vertexData) 
+			{
                 std::replace(vertexData.begin(), vertexData.end(), '/', ' ');
 
                 std::stringstream vertexStream(vertexData);
@@ -359,8 +367,10 @@ bool Mesh::loadObj(const char* filename) {
             faces.push_back(face);
         }
     }
-    for (const auto &face : faces) {
-        for (size_t i = 0; i < face.vertexInd.size(); ++i) {
+    for (const auto &face : faces) 
+	{
+        for (size_t i = 0; i < face.vertexInd.size(); ++i) 
+		{
             glm::vec3 pos = tempVertices[face.vertexInd[i]];
             glm::vec2 tex = tempTexCoords[face.texCoordInd[i]];
             glm::vec3 norm = tempNormals[face.normalInd[i]];
@@ -375,4 +385,3 @@ bool Mesh::loadObj(const char* filename) {
 
     return true;
 }
-
