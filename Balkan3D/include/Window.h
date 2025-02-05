@@ -17,6 +17,8 @@ public:
 	void swapBuffers();
 
 	void* getWindow() const;
+	const char* getTitle() const;
+	void setTitle(const char* newTitle);
 	int getWidth() const;
 	int getHeight() const;
 	void setSize(int width, int height);

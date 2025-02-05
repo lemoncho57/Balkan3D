@@ -23,7 +23,7 @@ int main(void)
 
 	Camera camera(glm::vec3(0.f, 0.f, 3.f), 50.f, (float) window.getWidth() / (float) window.getHeight());
 
-	Mesh bmw("bmwe34/source/BMW M5 E34.obj", &shader);
+	//Mesh bmw("bmwe34/source/BMW M5 E34.obj", &shader);
 	Mesh& mesh = *Mesh::Cube();
 	Mesh& mesh2 = *Mesh::Plane();
 
@@ -44,7 +44,7 @@ int main(void)
 	shader.setvec3f("userColor", { 1.f,1.f,1.f });
 	shader.unuse();
 	mesh2.setPosition({0,0,-3});
-	bmw.setPosition({0.f, 0.f, -2.f});
+	//bmw.setPosition({0.f, 0.f, -2.f});
 
 	int fps = 165.f;
 	while(!window.shouldClose())
@@ -134,10 +134,11 @@ int main(void)
 
 		// texture.activateTexture(0x84C0);
 		texture.use();
-		bmw.draw();
+		//bmw.draw();
 		texture.unuse();
 		// texture2.activateTexture(0x84C1);
 		// texture2.use();
+
 		texture2.use();
 		mesh.draw();
 		mesh2.draw();

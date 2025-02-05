@@ -64,6 +64,17 @@ void* Window::getWindow() const
 	return m_window;
 }
 
+const char* Window::getTitle() const
+{
+	return m_title;
+}
+
+void Window::setTitle(const char *newTitle)
+{
+	glfwSetWindowTitle((GLFWwindow*) m_window, newTitle);
+	m_title = (char*) newTitle;
+}
+
 int Window::getWidth() const
 {
 	return m_width;
