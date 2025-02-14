@@ -272,12 +272,12 @@ void Mesh::setShader(Shader* newShader)
 	}
 	if (newShader->getName().c_str() == 0)
 	{
-		LOG_INFO("Using shader(id): %s for %s", newShader->getId(), name.c_str());
+		LOG_INFO("Using shader(id): %lu for %s", newShader->getId(), name.c_str());
 	}
 	else
 	{
 		LOG_INFO("Using shader(name): %s for %s", newShader->getName().c_str(), name.c_str());
-		LOG_DEBUG("Using shader(id): %s for %s", newShader->getId(), name.c_str());
+		LOG_DEBUG("Using shader(id): %lu for %s", newShader->getId(), name.c_str());
 	}
 }
 
