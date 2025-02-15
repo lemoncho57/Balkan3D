@@ -4,7 +4,7 @@
 
 Framebuffer::Framebuffer()
 {
-    glGenFramebuffers(1, &FBO);
+    glGenFramebuffers(1, (GLuint*) &FBO);
     if (!FBO)
     {
         LOG_ERROR("Unable to create framebuffer!\n");

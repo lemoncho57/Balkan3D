@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Logging/Asserts.h"
 #include "Logging/Loging.h"
+#include "Graphics/Framebuffer.h"
 
 Window::Window(const char* title, int width, int height)
 	: m_title((char*)title), m_width(width), m_height(height)
@@ -29,11 +30,20 @@ Window::~Window()
 	close();
 }
 
-void Window::beginDrawing(float frameRate)
+void Window::beginDrawing(float frameRate, const Framebuffer* framebuffer)
 {
 	Clock::update(frameRate);
-	glfwGetFramebufferSize((GLFWwindow*)m_window, &m_width, &m_height);
-	glViewport(0, 0, m_width, m_height);
+	if(!framebuffer)
+	{
+		glfwGetFramebufferSize((GLFWwindow*)m_window, &m_width, &m_height);
+		glViewport(0, 0, m_width, m_height);
+	}
+	else
+	{
+		glViewport(0,0, m_width, m_height);
+		LOG_DEBUG("Using framebuffer: %lu", framebuffer->getFBO());
+	}
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 

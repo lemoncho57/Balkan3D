@@ -2,13 +2,15 @@
 #define WINDOW_H
 #include "Time/Clock.h"
 
+class Framebuffer;
+
 extern "C" class BALKAN3D_API Window
 {
 public:
 	Window(const char* title, int width, int height);
 	~Window();
 
-	void beginDrawing(float frameRate = 60);
+	void beginDrawing(float frameRate = 60, const Framebuffer* framebuffer = nullptr);
 	void endDrawing();
 
 	void close();
