@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include "Graphics/Shader.h"
 
 Mesh::Mesh(Shader* shader, const std::string& name,glm::vec3 transform, glm::vec3 rotation, glm::vec3 scale)
 {

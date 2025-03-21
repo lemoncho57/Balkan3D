@@ -30,7 +30,7 @@ Window::~Window()
 	close();
 }
 
-void Window::beginDrawing(float frameRate, const Framebuffer* framebuffer)
+void Window::beginDrawing(float frameRate, Framebuffer* framebuffer)
 {
 	Clock::update(frameRate);
 	if(!framebuffer)
@@ -43,8 +43,9 @@ void Window::beginDrawing(float frameRate, const Framebuffer* framebuffer)
 		glViewport(0,0, m_width, m_height);
 		LOG_DEBUG("Using framebuffer: %lu", framebuffer->getFBO());
 	}
-
+	framebuffer->bind();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	framebuffer->unbind();
 }
 
 void Window::endDrawing()

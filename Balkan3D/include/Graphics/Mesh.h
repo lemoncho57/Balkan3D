@@ -7,7 +7,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
 #include <vector>
-#include "Shader.h"
 
 extern "C" struct BALKAN3D_API Vertex
 {
@@ -23,6 +22,8 @@ extern "C" struct BALKAN3D_API Face
 	std::vector<unsigned int> normalInd;
 	std::vector<unsigned int> texCoordInd;
 };
+
+class Shader;
 
 extern "C" class BALKAN3D_API Mesh
 {

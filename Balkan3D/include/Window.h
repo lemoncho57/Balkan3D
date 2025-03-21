@@ -10,7 +10,7 @@ public:
 	Window(const char* title, int width, int height);
 	~Window();
 
-	void beginDrawing(float frameRate = 60, const Framebuffer* framebuffer = nullptr);
+	void beginDrawing(float frameRate = 60, Framebuffer* framebuffer = nullptr);
 	void endDrawing();
 
 	void close();

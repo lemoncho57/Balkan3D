@@ -10,6 +10,7 @@
 #include <Balkan3D/include/Time/Clock.h>
 #include <Balkan3D/include/Graphics/Light.h>
 #include <Balkan3D/include/Graphics/Material.h>
+#include <Balkan3D/include/Graphics/Framebuffer.h>
 #include <string>
 
 // Code is just for testing
@@ -17,20 +18,21 @@ int main(void)
 {
 	Window window("Idk", 1280, 720);
 	Events events;
-
+	
 	Shader shader((const char*)"vertex.glsl", (const char*)"fragment.glsl");
 	shader.setName("Default");
-
+	
 	Camera camera(glm::vec3(0.f, 0.f, 3.f), 50.f, (float) window.getWidth() / (float) window.getHeight());
-
+	
 	//Mesh bmw("bmwe34/source/BMW M5 E34.obj", &shader);
 	Mesh& mesh = *Mesh::Cube();
 	Mesh& mesh2 = *Mesh::Plane();
-
+	
 	mesh.setShader(&shader);
 	mesh2.setShader(&shader);
-
-	Texture texture("Ne_e_shoferska.png");
+	
+	Framebuffer framebuffer(window.getWidth(), window.getHeight());
+	//Texture texture("Ne_e_shoferska.png");
 	Texture texture2("Bira.png");
 
 	Material mat(1.f);
@@ -49,8 +51,15 @@ int main(void)
 	int fps = 165.f;
 	while(!window.shouldClose())
 	{
-		window.beginDrawing(fps);
+		window.beginDrawing(fps, &framebuffer);
+		framebuffer.bind();
 		GraphicsUtils::clearColor(0.f, 0.f, 0.f, 1.f);
+
+		//texture2.use();
+		mesh.draw();
+		mesh2.draw();
+		//texture2.unuse();
+		framebuffer.unbind();
 
 		{
 			static float speed = 1.5f;
@@ -119,6 +128,7 @@ int main(void)
 			//else
 			//	mesh.setPosition(mesh.getPosition());
 		};
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		shader.use();
 		shader.set1i("tex", 0);
@@ -132,16 +142,14 @@ int main(void)
 		shader.setvec3f("material.specular", mat.specular);
 		shader.set1f("material.shininess", mat.shininess);
 
+		texture2.use();
+
 		// texture.activateTexture(0x84C0);
-		texture.use();
+		//texture.use();
 		//bmw.draw();
-		texture.unuse();
+		//texture.unuse();
 		// texture2.activateTexture(0x84C1);
 		// texture2.use();
-
-		texture2.use();
-		mesh.draw();
-		mesh2.draw();
 		texture2.unuse();
 
 		if (events.isKeyPressed(KeyCodes::KEY_ESCAPE))
