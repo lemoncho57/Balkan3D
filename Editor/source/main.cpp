@@ -114,21 +114,21 @@ int main(void)
 				camera.setPosition(camera.getPosition());
 
 			static bool wireframe = false;
-			if (events.isKeyPressed(KeyCodes::KEY_L))
-				wireframe = true;
-			else
-				wireframe = false;
-			if(wireframe)
-				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			else
-				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			// if (events.isKeyPressed(KeyCodes::KEY_L))
+			// 	wireframe = true;
+			// else
+			// 	wireframe = false;
+			// if(wireframe)
+			// 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			// else
+			// 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 			//if (events.isKeyPressed(KeyCodes::KEY_UP))
 			//	mesh.setPosition({ mesh.getPosition().x, mesh.getPosition().y + 0.03f, mesh.getPosition().z }); // Needs to be multiplied by delta
 			//else
 			//	mesh.setPosition(mesh.getPosition());
 		};
-		glClear(GL_COLOR_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT);
 
 		shader.use();
 		shader.set1i("tex", 0);
